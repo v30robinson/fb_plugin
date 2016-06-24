@@ -15,10 +15,16 @@
 class HLGroupsCore
 {
     /**
+     * @var HLGroupsCustomPosts
+     */
+    protected $customPostType;
+    
+    /**
      * HLGroupsCore constructor.
      */
     public function __construct()
     {
-        
+        $this->customPostType = new HLGroupsCustomPosts();
+        $this->request = new HLGroupsRequest();
     }
 }

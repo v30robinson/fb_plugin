@@ -20,5 +20,33 @@ class HLGroupsAdmin extends HLGroupsCore
     public function __construct()
     {
         parent::__construct();
+
+        $this->initAdminActions();
+    }
+
+    /**
+     * Init actions for work with facebook users.
+     */
+    private function initAdminActions()
+    {
+        add_action('init', [$this, 'createGroupPostType']);
+    }
+
+    /**
+     * Create groups post type for show in the admin area
+     */
+    public function createGroupPostType()
+    {
+        register_post_type('fb_group', [
+            'labels' => [
+                'name' => 'Facebook groups',
+                'singular_name' => 'Facebook groups'
+            ],
+            'public' => true,
+            'has_archive' => false,
+            'supports' => [
+                'title', 'editor', 'author'
+            ]
+        ]);
     }
 }

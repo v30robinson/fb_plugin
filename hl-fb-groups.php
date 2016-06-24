@@ -49,6 +49,8 @@ function deactivate_hl_fb_groups() { }
  */
 function initClasses()
 {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-fb-groups-posts.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-fb-groups-request.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups.php';
     require_once plugin_dir_path( __FILE__ ) . 'admin/class-hl-fb-groups-admin.php';
     require_once plugin_dir_path( __FILE__ ) . 'public/class-hl-fb-groups-public.php';
@@ -69,7 +71,7 @@ function run_hl_fb_groups()
     initClasses();
 
     $public = new HLGroupsPublic();
-    $admin  = new HLGroupsAdmin();
+    $admin  = new HLGroupsAdmin();    
 }
 
 run_hl_fb_groups();
