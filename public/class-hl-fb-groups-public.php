@@ -18,9 +18,8 @@ class HLGroupsPublic extends HLGroupsCore
      * HLGroupsPublic constructor.
      */
     public function __construct()
-    {
+    {   
         parent::__construct();
-        
         add_action('fbl/after_login', [$this, 'saveFacebookGroups']);
     }
 
@@ -28,24 +27,8 @@ class HLGroupsPublic extends HLGroupsCore
      * Save user groups and posts to Wordpress DB as custom post type
      */
     public function saveFacebookGroups()
-    {
-        $response = $this->request->makeRequest(
-            $this->getUserToken(),
-            'me/groups',
-            'member_request_count,description,updated_time,name,owner'
-        );
-        
-        $this->customPostType->saveFacebookGroups($response);
-    }
-
-    /**
-     * get user token from request
-     * @return string
-     */
-    private function getUserToken()
-    {        
-        return isset($_POST['fb_response']['authResponse']['accessToken'])
-            ? $_POST['fb_response']['authResponse']['accessToken']
-            : '';
+    {   
+        $customPostType = new HLGroupsCustomPosts($this->getUserToken());
+        $customPostType->loadFacebookGroups();
     }
 }

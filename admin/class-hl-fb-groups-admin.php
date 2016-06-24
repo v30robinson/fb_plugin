@@ -20,16 +20,23 @@ class HLGroupsAdmin extends HLGroupsCore
     public function __construct()
     {
         parent::__construct();
-
-        $this->initAdminActions();
+        add_action('init', [$this, 'createGroupType']);
+        add_action('init', [$this, 'createGroupPostType']);
+        add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
+        add_action('manage_fb_post_posts_custom_column', [$this, 'changeCustomPostList'], 10, 2 );
     }
 
     /**
-     * Init actions for work with facebook users.
+     * Create groups post type for show in the admin area
      */
-    private function initAdminActions()
+    public function createGroupType()
     {
-        add_action('init', [$this, 'createGroupPostType']);
+        register_post_type('fb_group', [
+            'labels' => ['name' => 'Facebook groups'],
+            'public' => true,
+            'has_archive' => false,
+            'supports' => ['title', 'editor', 'author']
+        ]);
     }
 
     /**
@@ -37,16 +44,51 @@ class HLGroupsAdmin extends HLGroupsCore
      */
     public function createGroupPostType()
     {
-        register_post_type('fb_group', [
-            'labels' => [
-                'name' => 'Facebook groups',
-                'singular_name' => 'Facebook groups'
-            ],
+        register_post_type('fb_post', [
+            'labels' => ['name' => 'Facebook posts'],
             'public' => true,
             'has_archive' => false,
-            'supports' => [
-                'title', 'editor', 'author'
-            ]
+            'supports' => ['title', 'editor']
         ]);
+    }
+
+    /**
+     * Edit current Wordpress list for Facebook Posts
+     * @param $column - currenct c
+     * @param $postId
+     * 
+     * @todo need refactoring!!!
+     */
+    public function changeCustomPostList($column, $postId)
+    {
+        $parent = wp_get_post_parent_id($postId);
+        $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
+        $date = new DateTime($postMeta['updated_time']);
+
+        $fields = [
+            'group' => $this->viewHelper->getPostLink($parent, get_the_title($parent)),
+            'groupAuthor' => $this->viewHelper->getUserLink(
+                get_post_field('post_author', $parent ), get_the_author($parent)
+            ),
+            'published' => $this->viewHelper->getDate(human_time_diff($date->getTimestamp(), time()), 'test')
+        ];
+
+        if (array_key_exists($column, $fields)) {
+            echo $fields[$column];
+        }
+    }
+
+    /**
+     * Add new colums for default Wordpress list of posts
+     * @param $columns
+     * @return mixed
+     */
+    public function setCustomPostList($columns)
+    {
+        $columns['group']  = 'Group';
+        $columns['groupAuthor'] = 'Group Author';
+        $columns['published'] = 'Published data';
+        
+        return $columns;
     }
 }

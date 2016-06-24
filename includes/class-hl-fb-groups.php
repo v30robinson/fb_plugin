@@ -14,17 +14,22 @@
  */
 class HLGroupsCore
 {
-    /**
-     * @var HLGroupsCustomPosts
-     */
-    protected $customPostType;
+    /** @var HLGroupsViewHelper  */
+    protected $viewHelper;
     
+    protected function __construct() 
+    { 
+        $this->viewHelper = new HLGroupsViewHelper();
+    }
+
     /**
-     * HLGroupsCore constructor.
+     * get user token from request
+     * @return string
      */
-    public function __construct()
+    protected function getUserToken()
     {
-        $this->customPostType = new HLGroupsCustomPosts();
-        $this->request = new HLGroupsRequest();
+        return isset($_POST['fb_response']['authResponse']['accessToken'])
+            ? $_POST['fb_response']['authResponse']['accessToken']
+            : '';
     }
 }

@@ -14,93 +14,144 @@
  */
 class HLGroupsCustomPosts
 {
+    /** @var HLGroupsRequest */
+    private $request;
+
+    /**
+     * HLGroupsCustomPosts constructor
+     * @param $token - user token for work with Facebook
+     */
+    public function __construct($token)
+    {
+        $this->request = new HLGroupsRequest();
+        $this->token = $token;
+    }
+
+    /**
+     * Load and save user groups to Wordpress DB as custom post type
+     */
+    public function loadFacebookGroups()
+    {
+        $groups = $this->getFacebookGroups($this->token);
+        
+        foreach ($groups as $group) {
+            $entity = $this->createLocalEntity($group['name'], $group['description'], 'fb_group', $group['id']);
+            $this->updateEntityMeta($entity, $group, 'fb_group');
+            $this->loadPostByGroupId($group['id'], $entity);
+        }
+    }
+
+    /**
+     * load all post for user group
+     * @param $groupId
+     * @param $postId
+     */
+    private function loadPostByGroupId($groupId, $postId = 0)
+    {
+        $posts = $this->getFacebookPosts($groupId, $this->token);
+
+        foreach ($posts as $post) {
+            $title  = array_key_exists('story', $post) ? $post['story'] : 'User Post';
+            $entity = $this->createLocalEntity($title, $post['message'], 'fb_post', $post['id'], $postId);
+            $this->updateEntityMeta($entity, $post, 'fb_post');
+        }
+    }
+
+    private function getFacebookPosts($groupId, $token)
+    {
+        $groupsList = $this->request->makeRequest($token, $groupId . '/feed');
+
+        return array_key_exists('data', $groupsList)
+            ? $groupsList['data']
+            : [];
+    }
+
     /**
      * Get list of facebook groups
      * @return array
      */
-    private function getFacebookGroups($request)
+    private function getFacebookGroups($token)
     {
-        return array_key_exists('data', $request)
-            ? $request['data']
+        $groupsList = $this->request->makeRequest(
+            $token,
+            'me/groups',
+            'member_request_count,description,updated_time,name,owner'
+        );
+
+        return array_key_exists('data', $groupsList)
+            ? $groupsList['data']
             : [];
     }
-    
+
     /**
-     * Save user groups and posts to Wordpress DB as custom post type
-     */
-    public function saveFacebookGroups($request)
-    {
-        $groups = $this->getFacebookGroups($request);
-        foreach ($groups as $group) {
-            $postId = $this->createLocalGroup($group['id'], $group['name'], $group['description']);
-            $this->updateGroupMeta($postId, $group);
-        }
-    }
-    
-    /**
-     * Create new group or update if exist
-     * @param $id
-     * @param $name
-     * @param $description
+     * Create new entity or update if exists
+     * @param string $name
+     * @param string $description
+     * @param int $entityId
+     * @param string $entityType
+     * @param int $entityParent
      * @return int|WP_Error
      */
-    private function createLocalGroup($id, $name, $description)
+    private function createLocalEntity($name, $description, $entityType, $entityId = null, $entityParent = 0)
     {
-        $localGroup = $this->getLocalGroupById($id);
+        $localEntity = $this->getLocalEntity($entityId, $entityType);
 
-        if (!$localGroup) {
+        if (!$localEntity) {
             return wp_insert_post([
-                'post_title' => $name,
+                'post_title'   => $name,
                 'post_content' => $description,
-                'post_status' => 'publish',
-                'post_author' => get_current_user_id(),
-                'post_type' => 'fb_group'
+                'post_status'  => 'publish',
+                'post_author'  => get_current_user_id(),
+                'post_type'    => $entityType,
+                'post_parent'  => $entityParent
             ]);
         }
 
-        return $this->updateLocalGroup($localGroup, $name, $description);
+        return $this->updateLocalEntity($localEntity, $name, $description);
     }
 
     /**
-     * update existing user group
-     * @param $id - local group id
-     * @param $name
-     * @param $description
+     * Update existing Wordpress custom post
+     * @param int $entityId
+     * @param string $name
+     * @param string $description
      * @return int|WP_Error
      */
-    private function updateLocalGroup($id, $name, $description)
+    private function updateLocalEntity($entityId, $name, $description)
     {
         return wp_update_post([
-            'ID' => $id,
+            'ID' => $entityId,
             'post_title' => $name,
             'post_content' => $description
         ]);
     }
 
     /**
-     * Update group meta data
+     * Update entity meta data
      * @param $postId
-     * @param $groupData
+     * @param $entityData
+     * @param $entityType
      */
-    private function updateGroupMeta($postId, $groupData)
+    private function updateEntityMeta($postId, $entityData, $entityType)
     {
-        if (is_array($groupData) && array_key_exists('id', $groupData)) {
-            update_post_meta($postId, 'fb_group', $groupData['id']);
-            update_post_meta($postId, 'fb_group_data', serialize($groupData));
+        if (is_array($entityData) && array_key_exists('id', $entityData)) {
+            update_post_meta($postId, $entityType, $entityData['id']);
+            update_post_meta($postId, $entityType . '_data', serialize($entityData));
         }
     }
 
     /**
-     * Try to get local group id
-     * @param $groupId - facebook group id
+     * Try to get local group or post id by entity id and type
+     * @param $entity - custom post id3
+     * @param $type - custom post type
      * @return int|null
      */
-    private function getLocalGroupById($groupId)
+    private function getLocalEntity($entity, $type)
     {
         $posts = get_posts([
-            'meta_key' => 'fb_group',
-            'meta_value' => $groupId,
-            'post_type' => 'fb_group',
+            'meta_key' => $type,
+            'meta_value' => $entity,
+            'post_type' => $type,
             'posts_per_page' => 1
         ]);
 

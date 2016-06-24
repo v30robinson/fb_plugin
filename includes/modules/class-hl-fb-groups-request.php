@@ -23,7 +23,7 @@ class HLGroupsRequest
      */
     private function createUrl($userToken, $endpoint, $fields = '')
     {
-        $url  = 'https://graph.facebook.com/v2.6/' . $endpoint;
+        $url = 'https://graph.facebook.com/v2.6/' . $endpoint;
         $attr = [
             'access_token' => $userToken,
             'fields' => $fields
