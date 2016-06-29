@@ -13,14 +13,8 @@
  * @subpackage     hl-fb-groups/core
  */
 class HLGroupsCore
-{
-    /** @var HLGroupsViewHelper  */
-    protected $viewHelper;
-    
-    protected function __construct() 
-    { 
-        $this->viewHelper = new HLGroupsViewHelper();
-    }
+{    
+    protected function __construct() { }
 
     /**
      * get user token from request

@@ -20,6 +20,7 @@ class HLGroupsAdmin extends HLGroupsCore
     public function __construct()
     {
         parent::__construct();
+
         add_action('init', [$this, 'createGroupType']);
         add_action('init', [$this, 'createGroupPostType']);
         add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
@@ -56,8 +57,6 @@ class HLGroupsAdmin extends HLGroupsCore
      * Edit current Wordpress list for Facebook Posts
      * @param $column - currenct c
      * @param $postId
-     * 
-     * @todo need refactoring!!!
      */
     public function changeCustomPostList($column, $postId)
     {
@@ -65,16 +64,16 @@ class HLGroupsAdmin extends HLGroupsCore
         $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
         $date = new DateTime($postMeta['updated_time']);
 
-        $fields = [
-            'group' => $this->viewHelper->getPostLink($parent, get_the_title($parent)),
-            'groupAuthor' => $this->viewHelper->getUserLink(
-                get_post_field('post_author', $parent ), get_the_author($parent)
-            ),
-            'published' => $this->viewHelper->getDate(human_time_diff($date->getTimestamp(), time()), 'test')
-        ];
+        switch ($column) {
+            case 'group':
+                $groupTitle = get_the_title($parent);
+                echo '<a href="/wp-admin/post.php?post=' . $parent . '"> ' . $groupTitle . '</a>';
+                break;
 
-        if (array_key_exists($column, $fields)) {
-            echo $fields[$column];
+            case 'published':
+                $date = human_time_diff($date->getTimestamp(), time());
+                echo '<abbr title> ' . $date . '</abbr>';
+                break;
         }
     }
 
@@ -85,10 +84,11 @@ class HLGroupsAdmin extends HLGroupsCore
      */
     public function setCustomPostList($columns)
     {
-        $columns['group']  = 'Group';
-        $columns['groupAuthor'] = 'Group Author';
-        $columns['published'] = 'Published data';
-        
-        return $columns;
+        return array_merge(
+            $columns, [
+                'group' => 'Group',
+                'published' => 'Published data'
+            ]
+        );
     }
 }

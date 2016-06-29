@@ -21,6 +21,7 @@ class HLGroupsPublic extends HLGroupsCore
     {   
         parent::__construct();
         add_action('fbl/after_login', [$this, 'saveFacebookGroups']);
+        add_shortcode('get-user-groups', [$this, 'displayUserGroups']);
     }
 
     /**
@@ -30,5 +31,13 @@ class HLGroupsPublic extends HLGroupsCore
     {   
         $customPostType = new HLGroupsCustomPosts($this->getUserToken());
         $customPostType->loadFacebookGroups();
+    }
+
+    /**
+     * @return string
+     */
+    public function displayUserGroups()
+    {
+        return 'test';
     }
 }
