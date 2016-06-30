@@ -13,8 +13,14 @@
  * @subpackage     hl-fb-groups/core
  */
 class HLGroupsCore
-{    
-    protected function __construct() { }
+{
+    /** @var HLGroupsTemplate  */
+    protected $template;
+
+    protected function __construct()
+    {
+        $this->template = HLGroupsTemplate::getInstance();
+    }
 
     /**
      * get user token from request

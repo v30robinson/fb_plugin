@@ -46,7 +46,6 @@ class HLGroupsRequest
             $request = wp_remote_get($this->createUrl($userToken, $endpoint, $fields));
             $requestBody = json_decode(wp_remote_retrieve_body($request), true);
         }
-
         return $requestBody;
     }
 }

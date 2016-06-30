@@ -55,7 +55,7 @@ class HLGroupsAdmin extends HLGroupsCore
 
     /**
      * Edit current Wordpress list for Facebook Posts
-     * @param $column - currenct c
+     * @param $column - current column for editing
      * @param $postId
      */
     public function changeCustomPostList($column, $postId)
@@ -67,7 +67,7 @@ class HLGroupsAdmin extends HLGroupsCore
         switch ($column) {
             case 'group':
                 $groupTitle = get_the_title($parent);
-                echo '<a href="/wp-admin/post.php?post=' . $parent . '"> ' . $groupTitle . '</a>';
+                echo '<a href="/wp-admin/post.php?post=' . $parent . '&action=edit"> ' . $groupTitle . '</a>';
                 break;
 
             case 'published':

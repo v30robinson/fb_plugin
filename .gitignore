@@ -1,1 +1,8 @@
+admin/css/.sass-cache
+admin/css/hl-fb-groups.css.map
+
+public/css/.sass-cache
+public/css/hl-fb-groups.css.map
+public/template/cache/*
+
 vendor/*
