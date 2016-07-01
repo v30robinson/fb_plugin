@@ -22,10 +22,10 @@
                 {% endfor %}
             </div>
             <div class="group-new-post">
-                <form action="/">
-                    <input type="hidden" name="group" value="{{ group.id }}">
-                    <label for="message"></label>
-                    <textarea name="message" id="message"></textarea>
+                <form action="{{ formUrl }}" name="fb-group" method="post">
+                    <input type="hidden" name="fb-group-id" value="{{ group.id }}">
+                    <label for="fb-group-post"></label>
+                    <textarea name="fb-group-post" id="fb-group-post"></textarea>
                     <button type="submit">Send post to {{ group.title }} group</button>
                 </form>
             </div>

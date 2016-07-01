@@ -4,7 +4,10 @@
   padding: 15px; }
   .groups-list .group-container {
     background-color: #fff;
-    padding: 15px; }
+    padding: 15px;
+    margin-bottom: 15px; }
+    .groups-list .group-container:last-child {
+      margin-bottom: 0; }
     .groups-list .group-container .post-container {
       border: 1px solid #ccc;
       margin: 12px 0;

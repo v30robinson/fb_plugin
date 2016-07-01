@@ -23,8 +23,14 @@ class HLGroupsAdmin extends HLGroupsCore
 
         add_action('init', [$this, 'createGroupType']);
         add_action('init', [$this, 'createGroupPostType']);
+        add_action('login_enqueue_scripts', [$this, 'initPublicLibs'], 100);
         add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
         add_action('manage_fb_post_posts_custom_column', [$this, 'changeCustomPostList'], 10, 2 );
+    }
+
+    public function initPublicLibs()
+    {
+        $this->template->insertJSAndStyle();
     }
 
     /**

@@ -75,10 +75,14 @@ class HLGroupsTemplate
      */
     private function insertScript()
     {
-        wp_enqueue_script(
-            'hl-fb-groups-js',
-            $this->config->pluginUrl . '/js/hl-fb-groups.js'
-        );
+        wp_register_script('some_handle', null);
+        wp_enqueue_script('some_handle');
+        wp_localize_script('some_handle', 'fbl', [
+            'ajaxurl'  => admin_url('admin-ajax.php'),
+            'site_url' => home_url(),
+            'scopes'   => 'email,public_profile,user_managed_groups,publish_actions',
+            'appId'    => get_option('fbl_settings')["fb_id"]
+        ]);
     }
 
     /**

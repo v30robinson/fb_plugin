@@ -23,6 +23,7 @@ class HLGroupsPublic extends HLGroupsCore
 
         add_action('wp', [$this, 'initPublicLibs']);
         add_action('fbl/after_login', [$this, 'saveFacebookGroups']);
+        add_action('parse_request', [$this, 'getPostForm']);
         add_shortcode('get-user-groups', [$this, 'displayUserGroups']);
     }
 
@@ -38,8 +39,11 @@ class HLGroupsPublic extends HLGroupsCore
      * Save user groups and posts to Wordpress DB as custom post type
      */
     public function saveFacebookGroups()
-    {   
-        $customPostType = new HLGroupsFacebookManager($this->getUserToken());
+    {
+        $token = $this->getUserToken();
+        $this->saveLocalToken($token);
+
+        $customPostType = new HLGroupsFacebookManager($token);
         $customPostType->loadFacebookGroups();
     }
 
@@ -50,7 +54,19 @@ class HLGroupsPublic extends HLGroupsCore
     {
         $customPostType = new HLGroupsLocalEntityManager();
         $this->template->render('group-list', [
-            'groups' => $customPostType->getGroupEntities(get_current_user_id())
+            'groups'  => $customPostType->getGroupEntities(get_current_user_id()),
+            'formUrl' => $_SERVER['REQUEST_URI']
         ]);
+    }
+
+    public function getPostForm()
+    {
+        if (array_key_exists('fb-group-id', $_REQUEST) && array_key_exists('fb-group-post', $_REQUEST)) {
+            $facebookManager = new HLGroupsFacebookManager($this->getUserToken());
+            $facebookManager->pushFacebookPost(
+                $_REQUEST['fb-group-id'],
+                $_REQUEST['fb-group-post']
+            );
+        }        
     }
 }

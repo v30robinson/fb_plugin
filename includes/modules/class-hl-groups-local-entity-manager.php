@@ -23,7 +23,7 @@ class HLGroupsLocalEntityManager
      * @param int $entityParent
      * @return int|WP_Error
      */
-    protected function createLocalEntity($name, $description, $entityType, $entityId = null, $entityParent = 0)
+    public function createLocalEntity($name, $description, $entityType, $entityId = null, $entityParent = 0)
     {
         $localEntity = $this->getLocalEntityId($entityId, $entityType);
 
@@ -99,11 +99,13 @@ class HLGroupsLocalEntityManager
         $groups = [];
         $customPosts = get_posts([
             'post_type' => 'fb_group',
-            'author'    => $userId
+            'author'    => $userId,
+            'numberposts' => 1000
         ]);
 
         foreach($customPosts as $post) {
             array_push($groups, [
+                'id'          => $post->ID,
                 'title'       => $post->post_title,
                 'description' => $post->post_content,
                 'posts'       => $this->getPostEntities($post->ID)
@@ -123,11 +125,13 @@ class HLGroupsLocalEntityManager
         $posts = [];
         $customPosts = get_posts([
             'post_type'   => 'fb_post',
-            'post_parent' => $groupId
+            'post_parent' => $groupId,
+            'numberposts' => 1000
         ]);
 
         foreach($customPosts as $post) {
             array_push($posts, [
+                'id'          => $post->ID,
                 'title'       => $post->post_title,
                 'description' => $post->post_content,
             ]);

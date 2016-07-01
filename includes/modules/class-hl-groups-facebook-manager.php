@@ -34,7 +34,7 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
      * Load and save user groups to Wordpress DB as custom post type
      */
     public function loadFacebookGroups()
-    {
+    {        
         $groups = $this->getFacebookGroups($this->token);
         
         foreach ($groups as $group) {
@@ -61,13 +61,45 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     }
 
     /**
+     * Push message to facebook and create local entity
+     * @param $entity
+     * @param $message
+     */
+    public function pushFacebookPost($entity, $message)
+    {
+        $group = get_post_meta($entity, 'fb_group', true);
+        $post = $this->sendPostToFacebookGroup($group, $message);
+
+        if ($post) {
+            $this->createLocalEntity('User Post', $message, 'fb_post', $post, $entity);
+        }
+        
+    }
+
+    /**
+     * Send post to Facebook group
+     * @param int $groupId
+     * @param string $message
+     * @return int|null
+     */
+    private function sendPostToFacebookGroup($groupId, $message)
+    {
+        $request  = new HLGroupsRequest();
+        $response = $request->makePostRequest($this->token, $groupId . '/feed', [
+            'message' => $message
+        ]);
+
+        return array_key_exists('id', $response) ? $response['id'] : null;
+    }
+
+    /**
      * @param $groupId
      * @param $token
      * @return array
      */
     private function getFacebookPosts($groupId, $token)
     {
-        $groupsList = $this->request->makeRequest($token, $groupId . '/feed');
+        $groupsList = $this->request->makeGetRequest($token, $groupId . '/feed');
 
         return array_key_exists('data', $groupsList)
             ? $groupsList['data']
@@ -80,7 +112,7 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
      */
     private function getFacebookGroups($token)
     {
-        $groupsList = $this->request->makeRequest(
+        $groupsList = $this->request->makeGetRequest(
             $token,
             'me/groups',
             'member_request_count,description,updated_time,name,owner'
