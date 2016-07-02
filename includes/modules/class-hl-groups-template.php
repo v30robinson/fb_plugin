@@ -57,6 +57,7 @@ class HLGroupsTemplate
     {
         $this->insertStyles();
         $this->insertScript();
+        $this->insertFBLoginFix();
     }
 
     /**
@@ -75,8 +76,20 @@ class HLGroupsTemplate
      */
     private function insertScript()
     {
+        wp_enqueue_script('jquery');
+        wp_enqueue_script(
+            'hl-fb-groups-style',
+            $this->config->pluginUrl . '/js/hl-fb-groups.js'
+        );
+    }
+
+    /**
+     * Insert fix for Facebook Login plugin
+     */
+    private function insertFBLoginFix()
+    {
         wp_register_script('some_handle', null);
-        wp_enqueue_script('some_handle');
+        wp_enqueue_script ('some_handle');
         wp_localize_script('some_handle', 'fbl', [
             'ajaxurl'  => admin_url('admin-ajax.php'),
             'site_url' => home_url(),

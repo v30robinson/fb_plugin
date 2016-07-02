@@ -36,34 +36,24 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     public function loadFacebookGroups()
     {        
         $groups = $this->getFacebookGroups($this->token);
-        
-        foreach ($groups as $group) {
-            $entity = $this->createLocalEntity($group['name'], $group['description'], 'fb_group', $group['id']);
-            $this->updateEntityMeta($entity, $group, 'fb_group');
-            $this->loadFacebookPost($group['id'], $entity);
-        }
+        $this->saveFacebookGroups($groups);
     }
 
     /**
      * load all post for user group from Facebook
-     * @param $groupId
-     * @param $postId
+     * @param int $groupId
+     * @param int $postId
      */
     private function loadFacebookPost($groupId, $postId = 0)
     {
         $posts = $this->getFacebookPosts($groupId, $this->token);
-
-        foreach ($posts as $post) {
-            $title  = array_key_exists('story', $post) ? $post['story'] : 'User Post';
-            $entity = $this->createLocalEntity($title, $post['message'], 'fb_post', $post['id'], $postId);
-            $this->updateEntityMeta($entity, $post, 'fb_post');
-        }
+        $this->saveFacebookPosts($posts, $postId);
     }
 
     /**
      * Push message to facebook and create local entity
-     * @param $entity
-     * @param $message
+     * @param int$entity
+     * @param string $message
      */
     public function pushFacebookPost($entity, $message)
     {
@@ -73,7 +63,6 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
         if ($post) {
             $this->createLocalEntity('User Post', $message, 'fb_post', $post, $entity);
         }
-        
     }
 
     /**
@@ -93,8 +82,8 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     }
 
     /**
-     * @param $groupId
-     * @param $token
+     * @param int $groupId
+     * @param string $token
      * @return array
      */
     private function getFacebookPosts($groupId, $token)
@@ -121,5 +110,34 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
         return array_key_exists('data', $groupsList)
             ? $groupsList['data']
             : [];
+    }
+
+    /**
+     * Save facebook groups to the local storage
+     *
+     * @param array $groups
+     */
+    private function saveFacebookGroups(array $groups)
+    {
+        foreach ($groups as $group) {
+            $entity = $this->createLocalEntity($group['name'], $group['description'], 'fb_group', $group['id']);
+            $this->updateEntityMeta($entity, $group, 'fb_group');
+            $this->loadFacebookPost($group['id'], $entity);
+        }
+    }
+
+    /**
+     * Save facebook posts to the local storage
+     *
+     * @param array $posts
+     * @param int $postId
+     */
+    private function saveFacebookPosts(array $posts, $postId)
+    {
+        foreach ($posts as $post) {
+            $title  = array_key_exists('story', $post) ? $post['story'] : 'User Post';
+            $entity = $this->createLocalEntity($title, $post['message'], 'fb_post', $post['id'], $postId);
+            $this->updateEntityMeta($entity, $post, 'fb_post');
+        }
     }
 }

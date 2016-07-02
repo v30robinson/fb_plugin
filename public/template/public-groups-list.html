@@ -1,0 +1,26 @@
+<div class="public-groups-list">
+    {% for key, group in groups %}
+
+    {% endfor %}
+    <div class="group-new-group">
+        <form action="{{ formUrl }}" name="fb-group" method="post">
+            <label>
+                Facebook Group url:
+                <input type="text" name="fb-group-url" placeholder="Enter Facebook group url" required>
+            </label>
+            <label>
+                Facebook Group name:
+                <input type="text" name="fb-group-name" placeholder="Enter Facebook group name" required>
+            </label>
+            <label>
+                Facebook Group description:
+                <input type="text" name="fb-group-description" placeholder="Enter Facebook group description" required>
+            </label>
+            <label>
+                Facebook Group members:
+                <input type="text" name="fb-group-members" placeholder="Enter count of Facebook group members">
+            </label>
+            <button type="submit">Add group to local storage</button>
+        </form>
+    </div>
+</div>

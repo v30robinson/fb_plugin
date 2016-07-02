@@ -50,11 +50,12 @@ function deactivate_hl_fb_groups() { }
 function includeClasses()
 {
     require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-local-entity-manager.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-facebook-manager.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-from.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-request.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-template.php';
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups.php';
     require_once plugin_dir_path( __FILE__ ) . 'admin/class-hl-fb-groups-admin.php';
     require_once plugin_dir_path( __FILE__ ) . 'public/class-hl-fb-groups-public.php';
 

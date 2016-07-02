@@ -16,6 +16,7 @@ class HLGroupsLocalEntityManager
 {
     /**
      * Create new entity or update if exists
+     * 
      * @param string $name
      * @param string $description
      * @param int $entityId
@@ -43,6 +44,7 @@ class HLGroupsLocalEntityManager
 
     /**
      * Update existing Wordpress custom post
+     *
      * @param int $entityId
      * @param string $name
      * @param string $description
@@ -59,13 +61,16 @@ class HLGroupsLocalEntityManager
 
     /**
      * Update entity meta data
-     * @param $postId
-     * @param $entityData
-     * @param $entityType
+     *
+     * @param int $postId
+     * @param array $entityData
+     * @param string $entityType
      */
-    protected function updateEntityMeta($postId, $entityData, $entityType)
+    public function updateEntityMeta($postId, $entityData, $entityType)
     {
-        if (is_array($entityData) && array_key_exists('id', $entityData)) {
+        if (is_array($entityData) 
+            && array_key_exists('id', $entityData)
+        ) {
             update_post_meta($postId, $entityType, $entityData['id']);
             update_post_meta($postId, $entityType . '_data', serialize($entityData));
         }
@@ -73,8 +78,9 @@ class HLGroupsLocalEntityManager
 
     /**
      * Try to get local group or post id by entity id and type
-     * @param $entity - custom post id3
-     * @param $type - custom post type
+     *
+     * @param int $entity - custom post id
+     * @param string $type - custom post type
      * @return int|null
      */
     protected function getLocalEntityId($entity, $type)
@@ -91,6 +97,7 @@ class HLGroupsLocalEntityManager
 
     /**
      * Get all groups entities by user id
+     *
      * @param int $userId
      * @return array
      */
@@ -98,8 +105,8 @@ class HLGroupsLocalEntityManager
     {
         $groups = [];
         $customPosts = get_posts([
-            'post_type' => 'fb_group',
-            'author'    => $userId,
+            'post_type'   => 'fb_group',
+            'author'      => $userId,
             'numberposts' => 1000
         ]);
 
@@ -117,6 +124,7 @@ class HLGroupsLocalEntityManager
 
     /**
      * Get all posts entities by group id
+     *
      * @param int $groupId
      * @return array
      */

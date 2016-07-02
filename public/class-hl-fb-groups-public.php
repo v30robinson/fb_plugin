@@ -21,10 +21,27 @@ class HLGroupsPublic extends HLGroupsCore
     {   
         parent::__construct();
 
+        $this->initActions();
+        $this->initShortCodes();
+    }
+
+    /**
+     * initialization of plugin actions
+     */
+    private function initActions()
+    {
         add_action('wp', [$this, 'initPublicLibs']);
-        add_action('fbl/after_login', [$this, 'saveFacebookGroups']);
-        add_action('parse_request', [$this, 'getPostForm']);
-        add_shortcode('get-user-groups', [$this, 'displayUserGroups']);
+        add_action('fbl/after_login', [$this, 'saveFacebookGroups'], 10, 2);
+        add_action('parse_request', [$this, 'parseAllForms']);
+    }
+
+    /**
+     * initialization of plugin short codes system
+     */
+    private function initShortCodes()
+    {
+        add_shortcode('user-personal-groups', [$this, 'displayUserGroups']);
+        add_shortcode('public-groups', [$this, 'displayPublicGroups']);
     }
 
     /**
@@ -53,20 +70,34 @@ class HLGroupsPublic extends HLGroupsCore
     public function displayUserGroups()
     {
         $customPostType = new HLGroupsLocalEntityManager();
-        $this->template->render('group-list', [
+        
+        $this->template->render('groups-list', [
             'groups'  => $customPostType->getGroupEntities(get_current_user_id()),
             'formUrl' => $_SERVER['REQUEST_URI']
         ]);
     }
 
-    public function getPostForm()
+    /**
+     * Display public groups and form for creating new one group
+     * in the local storage
+     */
+    public function displayPublicGroups()
     {
-        if (array_key_exists('fb-group-id', $_REQUEST) && array_key_exists('fb-group-post', $_REQUEST)) {
-            $facebookManager = new HLGroupsFacebookManager($this->getUserToken());
-            $facebookManager->pushFacebookPost(
-                $_REQUEST['fb-group-id'],
-                $_REQUEST['fb-group-post']
-            );
-        }        
+        $customPostType = new HLGroupsLocalEntityManager();
+
+        $this->template->render('public-groups-list', [
+            'groups'  => $customPostType->getGroupEntities(0),
+            'formUrl' => $_SERVER['REQUEST_URI']
+        ]);
+    }
+
+    /**
+     * Parser for all user form (for FB post and FB groups)
+     */
+    public function parseAllForms()
+    {
+        $form = new HLGroupsForm();
+        $form->parseUserPostFrom($_REQUEST);
+        $form->parsePublicGroupForm($_REQUEST);
     }
 }

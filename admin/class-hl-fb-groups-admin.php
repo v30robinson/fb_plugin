@@ -52,10 +52,14 @@ class HLGroupsAdmin extends HLGroupsCore
     public function createGroupPostType()
     {
         register_post_type('fb_post', [
-            'labels' => ['name' => 'Facebook posts'],
+            'labels' => [
+                'name' => 'Facebook posts'
+            ],
             'public' => true,
             'has_archive' => false,
-            'supports' => ['title', 'editor']
+            'supports' => [
+                'title', 'editor'
+            ]
         ]);
     }
 
@@ -84,7 +88,7 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
-     * Add new colums for default Wordpress list of posts
+     * Add new columns for default Wordpress list of posts
      * @param $columns
      * @return mixed
      */

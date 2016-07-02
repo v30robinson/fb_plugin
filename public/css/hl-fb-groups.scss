@@ -1,7 +1,20 @@
+.public-groups-list,
 .groups-list {
+  margin: 15px 0;
   background-color: #ccc;
   border: 1px solid #000;
   padding: 15px;
+
+  .group-new-group {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
 
   .group-container {
     background-color: #fff;
@@ -20,7 +33,6 @@
     }
 
     .group-new-post {
-
       textarea {
         font-size: 12px;
       }
