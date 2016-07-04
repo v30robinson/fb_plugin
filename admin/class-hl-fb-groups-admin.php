@@ -14,23 +14,35 @@
  */
 class HLGroupsAdmin extends HLGroupsCore
 {
-    /**
-     * HLGroupsAdmin constructor.
-     */
+    
     public function __construct()
     {
         parent::__construct();
 
-        add_action('init', [$this, 'createGroupType']);
-        add_action('init', [$this, 'createGroupPostType']);
-        add_action('login_enqueue_scripts', [$this, 'initPublicLibs'], 100);
-        add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
-        add_action('manage_fb_post_posts_custom_column', [$this, 'changeCustomPostList'], 10, 2 );
+        $this->initActions();
+        $this->initFilters();
     }
 
-    public function initPublicLibs()
+    /**
+     * initialization of plugin actions
+     */
+    private function initActions()
     {
-        $this->template->insertJSAndStyle();
+        add_action('init', [$this, 'createGroupType']);
+        add_action('init', [$this, 'createGroupPostType']);
+        add_action('init', [$this, 'createPublicGroupPostType']);
+        add_action('manage_fb_post_posts_custom_column', [$this, 'changeCustomPostList'], 10, 2 );
+        add_action('wp_ajax_get_group_info_by', [$this, 'initCheckGroupEndpoint']);
+        add_action('wp_ajax_get_group_list_from', [$this, 'initLoadMoreEndpoint']);
+        add_action('login_enqueue_scripts', [$this->template, 'insertJSAndStyle'], 100);
+    }
+
+    /**
+     * initialization of plugin filters
+     */
+    private function initFilters()
+    {
+        add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
     }
 
     /**
@@ -100,5 +112,29 @@ class HLGroupsAdmin extends HLGroupsCore
                 'published' => 'Published data'
             ]
         );
+    }
+    
+    /**
+     * init endpoint for ajax checking Facebook group
+     * send json this group info
+     */
+    public function initCheckGroupEndpoint()
+    {
+        if (array_key_exists('id', $_REQUEST)) {
+            $facebook = new HLGroupsFacebookManager();
+            wp_send_json($facebook->loadFacebookGroupInfo($_REQUEST['id']));
+        }
+    }
+
+    /**
+     * init endpoint for ajax loading more Facebook groups
+     * send json with groups list
+     */
+    public function initLoadMoreEndpoint()
+    {
+        if (array_key_exists('number', $_REQUEST)) {
+            $customPostType = new HLGroupsLocalManager();
+            wp_send_json($customPostType->getPublicGroupEntities($_REQUEST['number']));
+        }
     }
 }

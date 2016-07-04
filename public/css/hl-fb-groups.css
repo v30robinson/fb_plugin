@@ -13,6 +13,14 @@
     .groups-list .group-new-group button {
       width: 100%;
       margin-top: 10px; }
+    .public-groups-list .group-new-group .no-logged-in,
+    .groups-list .group-new-group .no-logged-in {
+      font-size: 14px;
+      color: #740500; }
+  .public-groups-list .group-loader .load-more,
+  .groups-list .group-loader .load-more {
+    width: 100%;
+    margin-bottom: 15px; }
   .public-groups-list .group-container,
   .groups-list .group-container {
     background-color: #fff;
@@ -21,6 +29,9 @@
     .public-groups-list .group-container:last-child,
     .groups-list .group-container:last-child {
       margin-bottom: 0; }
+    .public-groups-list .group-container div[disabled],
+    .groups-list .group-container div[disabled] {
+      display: none; }
     .public-groups-list .group-container .post-container,
     .groups-list .group-container .post-container {
       border: 1px solid #ccc;

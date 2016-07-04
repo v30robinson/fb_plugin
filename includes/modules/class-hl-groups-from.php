@@ -12,7 +12,7 @@
  * @package        hl-fb-groups
  * @subpackage     hl-fb-groups/forms
  */
-class HLGroupsForm extends HLGroupsCore
+class HLGroupsForm
 {
     /**
      * Parse user post form and publish post in the FB group
@@ -21,7 +21,7 @@ class HLGroupsForm extends HLGroupsCore
     public function parseUserPostFrom($data)
     {
         if ($this->validateUserPost($data)) {
-            $facebookManager = new HLGroupsFacebookManager($this->getUserToken());
+            $facebookManager = new HLGroupsFacebookManager();
             $facebookManager->pushFacebookPost(
                 $data['fb-group-id'],
                 $data['fb-group-post']
@@ -36,15 +36,10 @@ class HLGroupsForm extends HLGroupsCore
     public function parsePublicGroupForm($data)
     {
         if ($this->validatePublicGroup($data)) {
-            $entityManager = new HLGroupsLocalEntityManager();
-
-            $group = $entityManager->createLocalEntity(
-                $data['fb-group-name'],
-                $data['fb-group-description'],
-                'fb_public_group'
+            $entityManager = new HLGroupsLocalManager();
+            $entityManager->savePublicGroupEntity(
+                $this->createGroupFormData($data)
             );
-
-            $entityManager->updateEntityMeta($group, $this->createGroupFormData($data), 'fb_public_group');
         }
     }
 
@@ -56,9 +51,11 @@ class HLGroupsForm extends HLGroupsCore
     private function createGroupFormData(array $data)
     {
         return [
-            'url'     => $data['fb-group-url'],
-            'members' => $data['fb-group-members'],
-            'id'      => $this->parseUrl($data['fb-group-url'])
+            'name'        => sanitize_text_field($data['fb-group-name']),
+            'description' => sanitize_text_field($data['fb-group-description']),
+            'url'         => sanitize_text_field($data['fb-group-url']),
+            'members'     => sanitize_text_field($data['fb-group-members']),
+            'id'          => sanitize_text_field($this->parseUrl($data['fb-group-url']))
         ];
     }
 

@@ -1,11 +1,11 @@
 (function($) {
     /**
      * If input with focus or unfocused - need load info about group
-     * @param groupUrlSelector
+     * @param {Object} groupUrlSelector
      */
     function getFacebookGroupInfo(groupUrlSelector) {
         groupUrlSelector.on('focusout', function () {
-            var facebookUrl = /https\:\/\/www.facebook.com\/groups\/([0-9\/]+)\/.*/,
+            var facebookUrl = /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
                 value = $(this).val();
 
             if (value.length && facebookUrl.test(value)) {
@@ -13,29 +13,107 @@
             }
         });
     }
+    
+    function loadMorePublicGroup(selector) {
+        selector.find('.load-more').on('click', function () {
+            getPublicGroupFrom(
+                selector,
+                countOfDisplayedGroups(selector)
+            );
+        });
+    }
 
     /**
-     * Make request to endpoint and set info into the fields about group
-     * @param $groupId
+     * Get list of groups from number
+     * @param {Object} selector
+     * @param {int} number
      */
-    function getGroupInfo($groupId) {
+    function getPublicGroupFrom(selector, number) {
         $.ajax({
-            url: "/wp-admin/admin-ajax.php?action=getGroupInfoBy&id=" + $groupId,
-            done: function (data) {
-                setInfoToField(null, data);
+            url: "/wp-admin/admin-ajax.php?action=get_group_list_from&number=" + number,
+            success: function (groups) {
+                groups.forEach(function (group) {
+                    selector.find('.group-loader').before(
+                        createGroupEntity(group['name'], group['url'], group['description'], group['members'])
+                    );
+                });
+
+                if (countOfAllGroups(selector) <= countOfDisplayedGroups(selector)) {
+                    selector.find('.load-more').hide();
+                }
             }
         });
     }
 
     /**
-     * 
-     * @param form
-     * @param data
+     * Create HTML entity of facebook group
+     * @param {string} name
+     * @param {string} url
+     * @param {string} description
+     * @param {int} members
+     * @returns {string}
+     */
+    function createGroupEntity(name, url, description, members) {
+        return '\
+            <div class="group-container">\
+                <div class="group-title">\
+                    <b>Group name</b>: ' + name + '\
+                </div>\
+                <div class="group-url">\
+                    <b>Group url</b>: <a target="_blank" href="' + url + '">Open ' + name + ' group</a>\
+                </div>\
+                <div class="group-description" ' + (description ? '' : 'disabled') + '>\
+                    <b>Group description</b>: ' + description + '\
+                </div>\
+                <div class="group-members" ' + (members ? '' : 'disabled') + '>\
+                    <b>Group members</b>: ' + members + '\
+                </div>\
+            </div>\
+        ';
+    }
+
+    /**
+     * Get count of displayed groups
+     * @param {Object} selector
+     * @returns {*}
+     */
+    function countOfDisplayedGroups(selector) {
+        return selector.find('.group-container').length;
+    }
+
+    /**
+     * Get count of all groups
+     * @returns {int}
+     */
+    function countOfAllGroups(selector) {
+        return selector.find('.group-loader').data('count');
+    }
+
+    /**
+     * Make request to endpoint and set info into the fields about group
+     * @param {int} $groupId
+     */
+    function getGroupInfo($groupId) {
+        $.ajax({
+            url: "/wp-admin/admin-ajax.php?action=get_group_info_by&id=" + $groupId,
+            success: function (data) {
+                setInfoToField($('form[name="fb-group"]'), data);
+            }
+        });
+    }
+
+    /**
+     * Set group data to the form, if form don't have error
+     * @param {Object} form - selector of form
+     * @param {Object} data - ajax data about FB groups
+     * @param {string} data.name
+     * @param {string} data.description
      */
     function setInfoToField(form, data) {
-        form.find('input[name="fb-group-name"]').val(data.name);
-        form.find('input[name="fb-group-description"]').val(data.description);
-        form.find('input[name="fb-group-members"]').val(data.members);
+        if (form.length) {            
+            form.find('input[name="fb-group-name"]').val(data.name || '');
+            form.find('input[name="fb-group-description"]').val(data.description || '');
+        }
     }
 
     /**
@@ -43,6 +121,6 @@
      */
     $(document).ready(function() {
         getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"]'));
+        loadMorePublicGroup($('.public-groups-list'));
     });
-
 })(jQuery);

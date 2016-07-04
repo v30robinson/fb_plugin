@@ -12,8 +12,19 @@
  * @package        hl-groups
  * @subpackage     hl-groups/local-entity-manager
  */
-class HLGroupsLocalEntityManager
+class HLGroupsEntityManager
 {
+    /** @var stdClass of config options */
+    protected $config;
+
+    public function __construct()
+    {
+        $this->config = new stdClass();
+        $this->config->userGroupType   = 'fb_group';
+        $this->config->userPostsType   = 'fb_post';
+        $this->config->publicGroupType = 'fb_group_public';
+    }
+
     /**
      * Create new entity or update if exists
      * 
@@ -24,7 +35,7 @@ class HLGroupsLocalEntityManager
      * @param int $entityParent
      * @return int|WP_Error
      */
-    public function createLocalEntity($name, $description, $entityType, $entityId = null, $entityParent = 0)
+    public function createLocalEntity($name, $description, $entityType, $entityId = 0, $entityParent = 0)
     {
         $localEntity = $this->getLocalEntityId($entityId, $entityType);
 
@@ -60,6 +71,18 @@ class HLGroupsLocalEntityManager
     }
 
     /**
+     * Get entity meta data
+     * @param int $postId
+     * @param string $entityType
+     * @return array
+     */
+    protected function getLocalEntityMeta($postId, $entityType)
+    {
+        $entityData = get_post_meta($postId, $entityType . '_data', true);
+        return unserialize($entityData);
+    }
+
+    /**
      * Update entity meta data
      *
      * @param int $postId
@@ -89,62 +112,9 @@ class HLGroupsLocalEntityManager
             'meta_key'       => $type,
             'meta_value'     => $entity,
             'post_type'      => $type,
-            'posts_per_page' => 1
+            'posts_per_page' => 1000
         ]);
 
         return count($posts) > 0 ? $posts[0]->ID : null;
-    }
-
-    /**
-     * Get all groups entities by user id
-     *
-     * @param int $userId
-     * @return array
-     */
-    public function getGroupEntities($userId)
-    {
-        $groups = [];
-        $customPosts = get_posts([
-            'post_type'   => 'fb_group',
-            'author'      => $userId,
-            'numberposts' => 1000
-        ]);
-
-        foreach($customPosts as $post) {
-            array_push($groups, [
-                'id'          => $post->ID,
-                'title'       => $post->post_title,
-                'description' => $post->post_content,
-                'posts'       => $this->getPostEntities($post->ID)
-            ]);
-        }
-
-        return $groups;
-    }
-
-    /**
-     * Get all posts entities by group id
-     *
-     * @param int $groupId
-     * @return array
-     */
-    protected function getPostEntities($groupId)
-    {
-        $posts = [];
-        $customPosts = get_posts([
-            'post_type'   => 'fb_post',
-            'post_parent' => $groupId,
-            'numberposts' => 1000
-        ]);
-
-        foreach($customPosts as $post) {
-            array_push($posts, [
-                'id'          => $post->ID,
-                'title'       => $post->post_title,
-                'description' => $post->post_content,
-            ]);
-        }
-
-        return $posts;
     }
 }

@@ -61,13 +61,30 @@ class HLGroupsRequest
      */
     public function makeGetRequest($userToken, $endpoint, $fields = '')
     {
-        $requestBody = [];
-
         if ($userToken) {
-            $request     = wp_remote_get($this->createUrl($userToken, $endpoint, $fields));
-            $requestBody = json_decode(wp_remote_retrieve_body($request), true);
+            $request  = wp_remote_get($this->createUrl($userToken, $endpoint, $fields));
+            return $this->parseRequest($request);
         }
+        
+        return [];        
+    }
 
-        return $requestBody;
+
+    /**
+     * Try to parse response from Facebook
+     * @param array $response
+     * @return array
+     * @throws Exception
+     */
+    private function parseRequest(array $response)
+    {
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+
+        if (array_key_exists('error', $responseBody)) {
+            $responseBody = [
+                'error' => $responseBody['error']['message']
+            ];
+        }
+        return $responseBody;
     }
 }

@@ -12,7 +12,7 @@
  * @package        hl-groups
  * @subpackage     hl-groups/facebook-manager
  */
-class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
+class HLGroupsFacebookManager extends HLGroupsEntityManager
 {
     /** @var HLGroupsRequest */
     private $request;
@@ -20,14 +20,12 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     /** @var string  */
     private $token;
 
-    /**
-     * HLGroupsCustomPosts constructor
-     * @param $token - user token for work with Facebook
-     */
-    public function __construct($token = null)
+    public function __construct()
     {
+        parent::__construct();
+        
         $this->request = new HLGroupsRequest();
-        $this->token = $token;
+        $this->token = $this->updateUserToken();
     }
 
     /**
@@ -57,31 +55,31 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
      */
     public function pushFacebookPost($entity, $message)
     {
-        $group = get_post_meta($entity, 'fb_group', true);
+        $group = get_post_meta($entity, $this->config->userGroupType, true);
         $post = $this->sendPostToFacebookGroup($group, $message);
 
         if ($post) {
-            $this->createLocalEntity('User Post', $message, 'fb_post', $post, $entity);
+            $this->createLocalEntity('User Post', $message, $this->config->userPostsType, $post, $entity);
         }
     }
 
     /**
      * Send post to Facebook group
+     *
      * @param int $groupId
      * @param string $message
      * @return int|null
      */
     private function sendPostToFacebookGroup($groupId, $message)
     {
-        $request  = new HLGroupsRequest();
-        $response = $request->makePostRequest($this->token, $groupId . '/feed', [
+        $response = $this->request->makePostRequest($this->token, $groupId . '/feed', [
             'message' => $message
         ]);
-
         return array_key_exists('id', $response) ? $response['id'] : null;
     }
 
     /**
+     *
      * @param int $groupId
      * @param string $token
      * @return array
@@ -120,8 +118,13 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     private function saveFacebookGroups(array $groups)
     {
         foreach ($groups as $group) {
-            $entity = $this->createLocalEntity($group['name'], $group['description'], 'fb_group', $group['id']);
-            $this->updateEntityMeta($entity, $group, 'fb_group');
+            $entity = $this->createLocalEntity(
+                $group['name'], 
+                $group['description'], 
+                $this->config->userGroupType, 
+                $group['id']
+            );
+            $this->updateEntityMeta($entity, $group, $this->config->userGroupType);
             $this->loadFacebookPost($group['id'], $entity);
         }
     }
@@ -135,9 +138,47 @@ class HLGroupsFacebookManager extends HLGroupsLocalEntityManager
     private function saveFacebookPosts(array $posts, $postId)
     {
         foreach ($posts as $post) {
-            $title  = array_key_exists('story', $post) ? $post['story'] : 'User Post';
-            $entity = $this->createLocalEntity($title, $post['message'], 'fb_post', $post['id'], $postId);
-            $this->updateEntityMeta($entity, $post, 'fb_post');
+            $entity = $this->createLocalEntity(
+                array_key_exists('story', $post) ? $post['story'] : 'User Post', 
+                $post['message'], 
+                $this->config->userPostsType, 
+                $post['id'], 
+                $postId
+            );
+            $this->updateEntityMeta($entity, $post, $this->config->userPostsType);
         }
+    }
+
+    /**
+     * Get group info by Facebook Group id
+     *
+     * @param $groupId
+     * @return array
+     */
+    public function loadFacebookGroupInfo($groupId = 0)
+    {
+        return $this->request->makeGetRequest(
+            $this->token,
+            $groupId,
+            'name,description'
+        );
+    }
+
+    /**
+     * update and get user token from request or from local storage
+     * @return string
+     */
+    private function updateUserToken()
+    {
+        $token = null;
+        
+        if ($_POST['fb_response']['authResponse']['accessToken']) {
+            $token = $_POST['fb_response']['authResponse']['accessToken'];
+            update_user_meta(get_current_user_id(), 'fb-token', $token);
+        } else {
+            $token = get_user_meta(get_current_user_id(), 'fb-token', true);
+        }
+        
+        return $token;
     }
 }

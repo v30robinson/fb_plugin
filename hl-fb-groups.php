@@ -51,8 +51,9 @@ function includeClasses()
 {
     require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups.php';
-    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-local-entity-manager.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-entity-manager.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-facebook-manager.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-local-manager.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-from.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-request.php';
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-template.php';
@@ -64,8 +65,6 @@ function includeClasses()
     register_activation_hook( __FILE__, 'activate_hl_fb_groups');
     register_deactivation_hook( __FILE__, 'deactivate_hl_fb_groups');
 }
-
-
 
 /**
  * Begins execution of the plugin.
@@ -80,7 +79,6 @@ function runPlugin()
         $public = new HLGroupsPublic();
         $admin  = new HLGroupsAdmin();
     }
-
 }
 
 includeClasses();

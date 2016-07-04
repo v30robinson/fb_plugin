@@ -1,26 +1,54 @@
 <div class="public-groups-list">
     {% for key, group in groups %}
-
+        <div class="group-container">
+            <div class="group-title">
+                <b>Group name</b>: {{ group.name }}
+            </div>
+            <div class="group-url">
+                <b>Group url</b>: <a href="{{ group.url }}" target="_blank">Open {{ group.name }} group</a>
+            </div>
+            {% if group.description %}
+                <div class="group-description">
+                    <b>Group description</b>: {{ group.description }}
+                </div>
+            {% endif %}
+            {% if group.members %}
+                <div class="group-members">
+                    <b>Group members</b>: {{ group.members }}
+                </div>
+            {% endif %}
+        </div>
     {% endfor %}
+    {% if groupsCount > 5 %}
+        <div class="group-loader" data-count="{{ groupsCount }}">
+            <button type="button" class="load-more">Load more public groups...</button>
+        </div>
+    {% endif %}
     <div class="group-new-group">
-        <form action="{{ formUrl }}" name="fb-group" method="post">
-            <label>
-                Facebook Group url:
-                <input type="text" name="fb-group-url" placeholder="Enter Facebook group url" required>
-            </label>
-            <label>
-                Facebook Group name:
-                <input type="text" name="fb-group-name" placeholder="Enter Facebook group name" required>
-            </label>
-            <label>
-                Facebook Group description:
-                <input type="text" name="fb-group-description" placeholder="Enter Facebook group description" required>
-            </label>
-            <label>
-                Facebook Group members:
-                <input type="text" name="fb-group-members" placeholder="Enter count of Facebook group members">
-            </label>
-            <button type="submit">Add group to local storage</button>
-        </form>
+        {% if user %}
+            <form action="{{ formUrl }}" name="fb-group" method="post">
+                <label>
+                    Facebook Group url:
+                    <input type="text" name="fb-group-url" placeholder="Enter Facebook group url" required>
+                </label>
+                <label>
+                    Facebook Group name:
+                    <input type="text" name="fb-group-name" placeholder="Enter Facebook group name" required>
+                </label>
+                <label>
+                    Facebook Group description:
+                    <input type="text" name="fb-group-description" placeholder="Enter Facebook group description" required>
+                </label>
+                <label>
+                    Facebook Group members:
+                    <input type="text" name="fb-group-members" placeholder="Enter count of Facebook group members">
+                </label>
+                <button type="submit">Add group to local storage</button>
+            </form>
+        {% else %}
+            <div class="no-logged-in">
+                Warning: you need to be logged in user for opportunity to add new public group!
+            </div>
+        {% endif %}
     </div>
 </div>

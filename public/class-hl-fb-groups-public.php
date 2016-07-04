@@ -30,9 +30,9 @@ class HLGroupsPublic extends HLGroupsCore
      */
     private function initActions()
     {
-        add_action('wp', [$this, 'initPublicLibs']);
         add_action('fbl/after_login', [$this, 'saveFacebookGroups'], 10, 2);
         add_action('parse_request', [$this, 'parseAllForms']);
+        add_action('wp', [$this->template, 'insertJSAndStyle']);
     }
 
     /**
@@ -45,22 +45,11 @@ class HLGroupsPublic extends HLGroupsCore
     }
 
     /**
-     * Insert styles and js files to user page
-     */
-    public function initPublicLibs()
-    {
-        $this->template->insertJSAndStyle();
-    }
-
-    /**
      * Save user groups and posts to Wordpress DB as custom post type
      */
     public function saveFacebookGroups()
     {
-        $token = $this->getUserToken();
-        $this->saveLocalToken($token);
-
-        $customPostType = new HLGroupsFacebookManager($token);
+        $customPostType = new HLGroupsFacebookManager();
         $customPostType->loadFacebookGroups();
     }
 
@@ -69,10 +58,10 @@ class HLGroupsPublic extends HLGroupsCore
      */
     public function displayUserGroups()
     {
-        $customPostType = new HLGroupsLocalEntityManager();
+        $entities = new HLGroupsLocalManager();
         
         $this->template->render('groups-list', [
-            'groups'  => $customPostType->getGroupEntities(get_current_user_id()),
+            'groups'  => $entities->getGroupEntities(get_current_user_id()),
             'formUrl' => $_SERVER['REQUEST_URI']
         ]);
     }
@@ -83,11 +72,13 @@ class HLGroupsPublic extends HLGroupsCore
      */
     public function displayPublicGroups()
     {
-        $customPostType = new HLGroupsLocalEntityManager();
-
+        $entities = new HLGroupsLocalManager();
+        
         $this->template->render('public-groups-list', [
-            'groups'  => $customPostType->getGroupEntities(0),
-            'formUrl' => $_SERVER['REQUEST_URI']
+            'groups'      => $entities->getPublicGroupEntities(),
+            'groupsCount' => $entities->countOfPublicGroupPages(),
+            'formUrl'     => $_SERVER['REQUEST_URI'],
+            'user'        => get_current_user_id()
         ]);
     }
 
