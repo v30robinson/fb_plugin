@@ -1,8 +1,8 @@
 {
   "0": {
-    "action": "manage_fb_post_posts_columns",
+    "filter": "manage_fb_post_posts_columns",
     "scope": null,
-    "method": "customPostList",
+    "method": "customPostListColumns",
     "priority": 10,
     "accepted_args": 1
   }

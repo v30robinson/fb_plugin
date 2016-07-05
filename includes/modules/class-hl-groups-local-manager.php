@@ -25,7 +25,8 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
         $customPosts = get_posts([
             'post_type'   => $this->config->userGroupType,
             'author'      => $userId,
-            'numberposts' => 1000
+            'numberposts' => 1000,
+            'orderby'     => 'date'
         ]);
 
         foreach ($customPosts as $post) {
@@ -51,7 +52,8 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
         $customPosts = get_posts([
             'post_type'   => $this->config->userPostsType,
             'post_parent' => $groupId,
-            'numberposts' => 5
+            'numberposts' => 1000,
+            'orderby'     => 'date'
         ]);
 
         foreach ($customPosts as $post) {
@@ -92,7 +94,8 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
         $customPosts = get_posts([
             'post_type'      => $this->config->publicGroupType,
             'posts_per_page' => $count,
-            'offset'         => $offset
+            'offset'         => $offset,
+            'orderby'        => 'date'
         ]);
 
         foreach ($customPosts as $post) {

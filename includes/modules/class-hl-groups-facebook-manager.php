@@ -28,7 +28,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      * Load and save user groups to Wordpress DB as custom post type
      */
     public function loadFacebookGroups()
-    {        
+    {
         $groups = $this->getFacebookGroups();
         $this->saveFacebookGroups($groups);
     }
@@ -55,7 +55,8 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
         $post = $this->sendPostToFacebookGroup($group, $message);
 
         if ($post) {
-            $this->createLocalEntity('User Post', $message, $this->config->userPostsType, $post, $entity);
+            $postId = $group . '_' . $post;
+            $this->createLocalEntity('User Post', $message, $this->config->userPostsType, $postId, $entity);
         }
     }
 
@@ -71,6 +72,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
         $response = $this->request->makePostRequest($groupId . '/feed', [
             'message' => $message
         ]);
+
         return array_key_exists('id', $response) ? $response['id'] : null;
     }
 
@@ -136,7 +138,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
                 array_key_exists('story', $post) ? $post['story'] : 'User Post', 
                 $post['message'], 
                 $this->config->userPostsType, 
-                $post['id'], 
+                $post['id'],
                 $postId
             );
             $this->updateEntityMeta($entity, $post, $this->config->userPostsType);

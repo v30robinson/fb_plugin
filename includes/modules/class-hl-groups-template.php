@@ -53,7 +53,7 @@ class HLGroupsTemplate
     /**
      * Register the stylesheets and js for the admin area.
      */
-    public function insertJSAndStyle()
+    public function insertJSAndStyleAction()
     {
         $this->insertStyles();
         $this->insertScript();

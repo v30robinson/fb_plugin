@@ -23,21 +23,86 @@ class HLGroupsRequest
     }
 
     /**
-     * update and get user token from request or from local storage
+     * Make POST request to Facebook API using endpoint
+     * @param string $endpoint
+     * @param array $attr
+     * @return array
+     */
+    public function makePostRequest($endpoint, $attr = [])
+    {
+        $response = wp_remote_post($this->createUrl($endpoint), $this->createPostData($attr));
+        return $this->parseRequest($response);
+    }
+
+    /**
+     * Make GET request to Facebook API using endpoint
+     * @param string $endpoint
+     * @param string $fields
+     * @return array
+     */
+    public function makeGetRequest($endpoint, $fields = '')
+    {
+        $request  = wp_remote_get($this->createUrl($endpoint, $fields));
+        return $this->parseRequest($request);
+    }
+
+    /**
+     * update local user token from request
      * @return string
      */
     private function updateUserToken()
     {
-        $token = null;
-
-        if ($_POST['fb_response']['authResponse']['accessToken']) {
-            $token = $_POST['fb_response']['authResponse']['accessToken'];
-            update_user_meta(get_current_user_id(), 'fb-token', $token);
-        } else {
-            $token = get_user_meta(get_current_user_id(), 'fb-token', true);
+        if (isset($_POST['fb_response']['authResponse']['accessToken'])) {
+            update_user_meta(
+                get_current_user_id(),
+                'fb-token',
+                $_POST['fb_response']['authResponse']['accessToken']
+            );
         }
 
-        return $token;
+        return get_user_meta(get_current_user_id(), 'fb-token', true);
+    }
+
+    /**
+     * Create array for post data
+     * @param array $postData
+     * @return array
+     */
+    private function createPostData($postData)
+    {
+        return [
+            'body' => $postData
+        ];
+    }
+
+    /**
+     * If token has been expired - logout user from website
+     * @param $error
+     * @return bool
+     */
+    private function isTokenError($error)
+    {
+        return array_key_exists('type', $error) && $error['type'] == 'OAuthException';
+    }
+
+    /**
+     * Create array with information about error
+     * @param array $error
+     * @return array
+     */
+    private function createResponseError(array $error = [])
+    {
+        if ($this->isTokenError($error)) {
+            wp_logout();
+        }
+
+        if (array_key_exists('code', $error) && array_key_exists('message', $error)) {
+            return [
+                'code'    => $error['code'],
+                'message' => $error['message']
+            ];
+        }
+        return [];
     }
 
     /**
@@ -49,49 +114,16 @@ class HLGroupsRequest
      */
     private function createUrl($endpoint, $fields = '', $attr = [])
     {
-        $url  = 'https://graph.facebook.com/v2.6/' . $endpoint;
-        $attr = array_merge($attr, [
+        $requestUrl = array_merge($attr, [
             'access_token' => $this->token,
             'fields'       => $fields
         ]);
         
-        return add_query_arg($attr, $url);
+        return add_query_arg(
+            $requestUrl,
+            'https://graph.facebook.com/v2.6/' . $endpoint
+        );
     }
-
-    /**
-     * Make POST request to Facebook API using endpoint
-     * @param string $endpoint
-     * @param array $attr
-     * @return array
-     */
-    public function makePostRequest($endpoint, $attr)
-    {
-        $requestBody = [];
-
-        if ($this->token) {
-            $request     = wp_remote_post($this->createUrl($endpoint, '', $attr));
-            $requestBody = json_decode(wp_remote_retrieve_body($request), true);
-        }
-
-        return $requestBody;
-    }
-    
-    /**
-     * Make GET request to Facebook API using endpoint
-     * @param string $endpoint
-     * @param string $fields
-     * @return array
-     */
-    public function makeGetRequest($endpoint, $fields = '')
-    {
-        if ($this->token) {
-            $request  = wp_remote_get($this->createUrl($endpoint, $fields));
-            return $this->parseRequest($request);
-        }
-        
-        return [];        
-    }
-
 
     /**
      * Try to parse response from Facebook
@@ -103,11 +135,8 @@ class HLGroupsRequest
     {
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
-        if (array_key_exists('error', $responseBody)) {
-            $responseBody = [
-                'error' => $responseBody['error']['message']
-            ];
-        }
-        return $responseBody;
+        return array_key_exists('error', $responseBody)
+            ? $this->createResponseError($responseBody['error'])
+            : $responseBody;
     }
 }

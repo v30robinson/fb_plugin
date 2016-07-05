@@ -23,22 +23,13 @@ class HLGroupsPublic extends HLGroupsCore
     }
 
     /**
-     * Save user groups and posts to Wordpress DB as custom post type
-     */
-    public function saveFacebookGroupsAction()
-    {
-        $customPostType = new HLGroupsFacebookManager();
-        $customPostType->loadFacebookGroups();
-    }
-
-    /**
      * Display user groups and post for groups
      */
     public function userGroupsShortCode()
     {
         $entities = new HLGroupsLocalManager();
         
-        $this->template->render('groups-list', [
+        $this->template->render('user-groups-list', [
             'groups'  => $entities->getGroupEntities(get_current_user_id()),
             'formUrl' => $_SERVER['REQUEST_URI']
         ]);
@@ -68,5 +59,13 @@ class HLGroupsPublic extends HLGroupsCore
         $form = new HLGroupsForm();
         $form->parseUserPostFrom($_REQUEST);
         $form->parsePublicGroupForm($_REQUEST);
+    }
+    
+    /**
+     * Register the stylesheets and js for the admin area.
+     */
+    public function publicLibsAction()
+    {
+        $this->template->insertJSAndStyleAction();
     }
 }

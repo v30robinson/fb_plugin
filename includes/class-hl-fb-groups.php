@@ -25,20 +25,6 @@ class HLGroupsCore
         $this->template = HLGroupsTemplate::getInstance();
         $this->plugin = $this->setPluginInfo();
     }
-
-    /**
-     * Create plugin info
-     * @return stdClass of plugin info
-     */
-    private function setPluginInfo()
-    {
-        $config = new stdClass();
-        $config->name = 'hl-fb-groups';
-        $config->path = WP_PLUGIN_DIR . '/' . $config->name . '/';
-        $config->mode = is_admin() ? 'admin' : 'public';
-        
-        return $config;
-    }
     
     /**
      * Get array with scope class and method of this class
@@ -126,6 +112,18 @@ class HLGroupsCore
         return file_exists($filePath) 
             ? $filePath
             : null;
-            
+    }
+
+    /**
+     * Create plugin info
+     * @return stdClass of plugin info
+     */
+    private function setPluginInfo()
+    {
+        $config = new stdClass();
+        $config->name = 'hl-fb-groups';
+        $config->path = WP_PLUGIN_DIR . '/' . $config->name . '/';
+        $config->mode = !is_admin() ? 'public' : 'admin';
+        return $config;
     }
 }

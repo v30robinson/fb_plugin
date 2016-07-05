@@ -29,9 +29,16 @@
   },
   "4": {
     "action": "login_enqueue_scripts",
-    "scope": "template",
-    "method": "insertJSAndStyle",
+    "scope": null,
+    "method": "adminLibs",
     "priority": 100,
     "accepted_args": 1
+  },
+  "5": {
+    "action": "fbl/after_login",
+    "scope": null,
+    "method": "saveFacebookGroups",
+    "priority": 10,
+    "accepted_args": 2
   }
 }

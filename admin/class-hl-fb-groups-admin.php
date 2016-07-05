@@ -23,6 +23,19 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
+     * Save user groups and posts to Wordpress DB as custom post type;
+     * Set current user (fix for Facebook Login plugin)
+     * @param WP_User $user
+     * @param int $userId
+     */
+    public function saveFacebookGroupsAction($user, $userId)
+    {
+        wp_set_current_user($userId);
+        $customPostType = new HLGroupsFacebookManager();
+        $customPostType->loadFacebookGroups();
+    }
+
+    /**
      * initialization custom post types
      */
     public function initPostTypesAction()
@@ -38,35 +51,11 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
-     * Edit current Wordpress list for Facebook Posts
-     * @param $column - current column for editing
-     * @param $postId
-     */
-    public function customPostListAction($column, $postId)
-    {
-        $parent   = wp_get_post_parent_id($postId);
-        $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
-        $date     = new DateTime($postMeta['updated_time']);
-
-        switch ($column) {
-            case 'group':
-                $groupTitle = get_the_title($parent);
-                echo '<a href="/wp-admin/post.php?post=' . $parent . '&action=edit"> ' . $groupTitle . '</a>';
-                break;
-
-            case 'published':
-                $date = human_time_diff($date->getTimestamp(), time());
-                echo '<abbr title> ' . $date . '</abbr>';
-                break;
-        }
-    }
-
-    /**
      * Add new columns for default Wordpress list of posts.
      * @param $columns
      * @return mixed
      */
-    public function customPostListFilter($columns)
+    public function customPostListColumnsFilter($columns)
     {
         return array_merge(
             $columns, [
@@ -98,5 +87,37 @@ class HLGroupsAdmin extends HLGroupsCore
             $customPostType = new HLGroupsLocalManager();
             wp_send_json($customPostType->getPublicGroupEntities($_REQUEST['number']));
         }
+    }
+
+    /**
+     * Edit current Wordpress list for Facebook Posts
+     * @param $column - current column for editing
+     * @param $postId
+     */
+    public function customPostListAction($column, $postId)
+    {
+        $parent   = wp_get_post_parent_id($postId);
+        $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
+        $date     = new DateTime($postMeta['updated_time']);
+
+        switch ($column) {
+            case 'group':
+                $groupTitle = get_the_title($parent);
+                echo '<a href="/wp-admin/post.php?post=' . $parent . '&action=edit"> ' . $groupTitle . '</a>';
+                break;
+
+            case 'published':
+                $date = human_time_diff($date->getTimestamp(), time());
+                echo '<abbr title> ' . $date . '</abbr>';
+                break;
+        }
+    }
+    
+    /**
+     * Register the stylesheets and js for the admin area.
+     */
+    public function adminLibsAction()
+    {
+        $this->template->insertJSAndStyleAction();
     }
 }
