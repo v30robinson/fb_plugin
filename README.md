@@ -14,12 +14,18 @@ This plugin is an extension to the existing plugin Facebook Login for work with 
 ### 1.2. Project structure###
 
     |- admin            : classes for Admin page of WordPress plugin
+        |- css          : styles for Admin pages
+        |- js           : js files for Admin pages
+        |- template     : static HTML contents for Admin pages
+    |- config           : plugin configs files
+        |-admin         : plugin configs for admin part
+        |-public        : plugin configs for public part
     |- includes         : base classes of plugins
         |- modules      : classes for modules of plugin
     |- public           : classes for Public pages of WordPress plugin
         |- css          : styles for Public pages
         |- js           : js files for Public pages
-        |- template     : static HTML contents for Admin pages
+        |- template     : static HTML contents for Public pages
      |- vendor          : dependence included via composer
     hl-fb-groups.php    : bootstrap file for all classes of plugin
 

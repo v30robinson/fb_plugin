@@ -36,12 +36,24 @@ if (!defined('WPINC')) {
 /**
  * The code that runs during plugin activation.
  */
-function activate_hl_fb_groups() { }
+function activate_hl_fb_groups()
+{
+    if (!is_plugin_active('wp-facebook-login/facebook-login.php')) {
+        echo '<b>Dependency error!</b> 
+              For plugin work need to install and activate 
+              <a href="https://wordpress.org/plugins/wp-facebook-login/" target="_blank">Facebook Login</a> plugin!
+             ';
+        exit();
+    }
+}
 
 /**
  * The code that runs during plugin deactivation.
  */
-function deactivate_hl_fb_groups() { }
+function deactivate_hl_fb_groups()
+{
+    exec('rm -rfv ' . plugin_dir_path(__FILE__) . 'vendor/*');
+}
 
 /**
  * The core plugin classes that is used to define internationalization, admin-specific hooks,
@@ -78,6 +90,7 @@ function runPlugin()
     if (is_plugin_active('wp-facebook-login/facebook-login.php')) {
         $public = new HLGroupsPublic();
         $admin  = new HLGroupsAdmin();
+        return;
     }
 }
 

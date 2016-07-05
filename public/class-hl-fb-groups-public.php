@@ -14,9 +14,6 @@
  */
 class HLGroupsPublic extends HLGroupsCore
 {
-    /**
-     * HLGroupsPublic constructor.
-     */
     public function __construct()
     {   
         parent::__construct();
@@ -28,7 +25,7 @@ class HLGroupsPublic extends HLGroupsCore
     /**
      * Save user groups and posts to Wordpress DB as custom post type
      */
-    public function saveFacebookGroups()
+    public function saveFacebookGroupsAction()
     {
         $customPostType = new HLGroupsFacebookManager();
         $customPostType->loadFacebookGroups();
@@ -37,7 +34,7 @@ class HLGroupsPublic extends HLGroupsCore
     /**
      * Display user groups and post for groups
      */
-    public function displayUserGroups()
+    public function userGroupsShortCode()
     {
         $entities = new HLGroupsLocalManager();
         
@@ -51,7 +48,7 @@ class HLGroupsPublic extends HLGroupsCore
      * Display public groups and form for creating new one group
      * in the local storage
      */
-    public function displayPublicGroups()
+    public function publicGroupsShortCode()
     {
         $entities = new HLGroupsLocalManager();
         
@@ -66,7 +63,7 @@ class HLGroupsPublic extends HLGroupsCore
     /**
      * Parser for all user form (for FB post and FB groups)
      */
-    public function parseAllForms()
+    public function parseFormsAction()
     {
         $form = new HLGroupsForm();
         $form->parseUserPostFrom($_REQUEST);

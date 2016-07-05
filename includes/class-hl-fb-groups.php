@@ -63,7 +63,7 @@ class HLGroupsCore
         foreach ($this->getConfig($part . '/actions') as $item) {
             add_action(
                 $item->action,
-                $this->getCallbackFuncByName($item->method, $item->scope),
+                $this->getCallbackFuncByName($item->method . 'Action', $item->scope),
                 $item->priority,
                 $item->accepted_args
             );
@@ -79,7 +79,7 @@ class HLGroupsCore
         foreach ($this->getConfig($part . '/filters') as $item) {
             add_filter(
                 $item->filter,
-                $this->getCallbackFuncByName($item->method, $item->scope),
+                $this->getCallbackFuncByName($item->method . 'Filter', $item->scope),
                 $item->priority,
                 $item->accepted_args
             );
@@ -95,7 +95,7 @@ class HLGroupsCore
         foreach ($this->getConfig($part . '/shortCodes') as $item) {
             add_shortcode(
                 $item->name,
-                $this->getCallbackFuncByName($item->method, $item->scope)
+                $this->getCallbackFuncByName($item->method . 'ShortCode', $item->scope)
             );
         }
     }

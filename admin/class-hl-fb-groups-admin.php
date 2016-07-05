@@ -25,7 +25,7 @@ class HLGroupsAdmin extends HLGroupsCore
     /**
      * initialization custom post types
      */
-    public function initCustomPostType()
+    public function initPostTypesAction()
     {
         foreach ($this->getConfig('postType') as $key => $postType) {
             register_post_type($key, [
@@ -42,7 +42,7 @@ class HLGroupsAdmin extends HLGroupsCore
      * @param $column - current column for editing
      * @param $postId
      */
-    public function changeCustomPostList($column, $postId)
+    public function customPostListAction($column, $postId)
     {
         $parent   = wp_get_post_parent_id($postId);
         $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
@@ -62,25 +62,25 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
-     * Add new columns for default Wordpress list of posts
+     * Add new columns for default Wordpress list of posts.
      * @param $columns
      * @return mixed
      */
-    public function setCustomPostList($columns)
+    public function customPostListFilter($columns)
     {
         return array_merge(
             $columns, [
-                'group' => 'Group',
+                'group'     => 'Group',
                 'published' => 'Published data'
             ]
         );
     }
     
     /**
-     * init endpoint for ajax checking Facebook group
-     * send json this group info
+     * Init endpoint for ajax checking Facebook group;
+     * send json this group info.
      */
-    public function initCheckGroupEndpoint()
+    public function checkGroupEndpointAction()
     {
         if (array_key_exists('id', $_REQUEST)) {
             $facebook = new HLGroupsFacebookManager();
@@ -89,10 +89,10 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
-     * init endpoint for ajax loading more Facebook groups
-     * send json with groups list
+     * Init endpoint for ajax loading more Facebook groups;
+     * send json with groups list.
      */
-    public function initLoadMoreEndpoint()
+    public function loadMoreEndpointAction()
     {
         if (array_key_exists('number', $_REQUEST)) {
             $customPostType = new HLGroupsLocalManager();

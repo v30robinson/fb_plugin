@@ -2,11 +2,11 @@
   "0": {
     "name": "user-personal-groups",
     "scope": null,
-    "method": "displayUserGroups"
+    "method": "userGroups"
   },
   "1": {
     "name": "public-groups",
     "scope": null,
-    "method": "displayPublicGroups"
+    "method": "publicGroups"
   }
 }

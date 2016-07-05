@@ -9,7 +9,7 @@
   "1": {
     "action": "parse_request",
     "scope": null,
-    "method": "parseAllForms",
+    "method": "parseForms",
     "priority": 10,
     "accepted_args": 1
   },
