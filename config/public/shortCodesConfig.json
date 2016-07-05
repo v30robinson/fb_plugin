@@ -1,0 +1,12 @@
+{
+  "0": {
+    "name": "user-personal-groups",
+    "scope": null,
+    "method": "displayUserGroups"
+  },
+  "1": {
+    "name": "public-groups",
+    "scope": null,
+    "method": "displayPublicGroups"
+  }
+}

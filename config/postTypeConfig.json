@@ -1,0 +1,28 @@
+{
+  "fb_group": {
+    "labels": {
+      "name": "Facebook groups"
+    },
+    "public": true,
+    "has_archive": false,
+    "supports": [
+      "title", "editor", "author"
+    ]
+  },
+  "fb_post": {
+    "labels": {
+      "name": "Facebook posts"
+    },
+    "public": true,
+    "has_archive": false,
+    "supports": [
+      "title", "editor"
+    ]
+  },
+  "fb_group_public": {
+    "labels": null,
+    "public": false,
+    "has_archive": false,
+    "supports": []
+  }
+}

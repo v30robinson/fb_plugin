@@ -21,27 +21,8 @@ class HLGroupsPublic extends HLGroupsCore
     {   
         parent::__construct();
 
-        $this->initActions();
-        $this->initShortCodes();
-    }
-
-    /**
-     * initialization of plugin actions
-     */
-    private function initActions()
-    {
-        add_action('fbl/after_login', [$this, 'saveFacebookGroups'], 10, 2);
-        add_action('parse_request', [$this, 'parseAllForms']);
-        add_action('wp', [$this->template, 'insertJSAndStyle']);
-    }
-
-    /**
-     * initialization of plugin short codes system
-     */
-    private function initShortCodes()
-    {
-        add_shortcode('user-personal-groups', [$this, 'displayUserGroups']);
-        add_shortcode('public-groups', [$this, 'displayPublicGroups']);
+        $this->initActions($this->plugin->mode);
+        $this->initShortCodes($this->plugin->mode);
     }
 
     /**

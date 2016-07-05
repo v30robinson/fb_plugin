@@ -14,65 +14,27 @@
  */
 class HLGroupsAdmin extends HLGroupsCore
 {
-    
     public function __construct()
     {
         parent::__construct();
-
-        $this->initActions();
-        $this->initFilters();
+        
+        $this->initActions($this->plugin->mode);
+        $this->initFilters($this->plugin->mode);
     }
 
     /**
-     * initialization of plugin actions
+     * initialization custom post types
      */
-    private function initActions()
+    public function initCustomPostType()
     {
-        add_action('init', [$this, 'createGroupType']);
-        add_action('init', [$this, 'createGroupPostType']);
-        add_action('init', [$this, 'createPublicGroupPostType']);
-        add_action('manage_fb_post_posts_custom_column', [$this, 'changeCustomPostList'], 10, 2 );
-        add_action('wp_ajax_get_group_info_by', [$this, 'initCheckGroupEndpoint']);
-        add_action('wp_ajax_get_group_list_from', [$this, 'initLoadMoreEndpoint']);
-        add_action('login_enqueue_scripts', [$this->template, 'insertJSAndStyle'], 100);
-    }
-
-    /**
-     * initialization of plugin filters
-     */
-    private function initFilters()
-    {
-        add_filter('manage_fb_post_posts_columns', [$this, 'setCustomPostList']);
-    }
-
-    /**
-     * Create groups post type for show in the admin area
-     */
-    public function createGroupType()
-    {
-        register_post_type('fb_group', [
-            'labels' => ['name' => 'Facebook groups'],
-            'public' => true,
-            'has_archive' => false,
-            'supports' => ['title', 'editor', 'author']
-        ]);
-    }
-
-    /**
-     * Create groups post type for show in the admin area
-     */
-    public function createGroupPostType()
-    {
-        register_post_type('fb_post', [
-            'labels' => [
-                'name' => 'Facebook posts'
-            ],
-            'public' => true,
-            'has_archive' => false,
-            'supports' => [
-                'title', 'editor'
-            ]
-        ]);
+        foreach ($this->getConfig('postType') as $key => $postType) {
+            register_post_type($key, [
+                'labels'      => $postType->labels,
+                'public'      => $postType->public,
+                'has_archive' => $postType->has_archive,
+                'supports'    => $postType->supports
+            ]);
+        }
     }
 
     /**
@@ -82,9 +44,9 @@ class HLGroupsAdmin extends HLGroupsCore
      */
     public function changeCustomPostList($column, $postId)
     {
-        $parent = wp_get_post_parent_id($postId);
+        $parent   = wp_get_post_parent_id($postId);
         $postMeta = unserialize(get_post_meta($postId, 'fb_post_data', true));
-        $date = new DateTime($postMeta['updated_time']);
+        $date     = new DateTime($postMeta['updated_time']);
 
         switch ($column) {
             case 'group':

@@ -16,16 +16,12 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
 {
     /** @var HLGroupsRequest */
     private $request;
-    
-    /** @var string  */
-    private $token;
 
     public function __construct()
     {
         parent::__construct();
         
         $this->request = new HLGroupsRequest();
-        $this->token = $this->updateUserToken();
     }
 
     /**
@@ -33,7 +29,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      */
     public function loadFacebookGroups()
     {        
-        $groups = $this->getFacebookGroups($this->token);
+        $groups = $this->getFacebookGroups();
         $this->saveFacebookGroups($groups);
     }
 
@@ -44,7 +40,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      */
     private function loadFacebookPost($groupId, $postId = 0)
     {
-        $posts = $this->getFacebookPosts($groupId, $this->token);
+        $posts = $this->getFacebookPosts($groupId);
         $this->saveFacebookPosts($posts, $postId);
     }
 
@@ -72,7 +68,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      */
     private function sendPostToFacebookGroup($groupId, $message)
     {
-        $response = $this->request->makePostRequest($this->token, $groupId . '/feed', [
+        $response = $this->request->makePostRequest($groupId . '/feed', [
             'message' => $message
         ]);
         return array_key_exists('id', $response) ? $response['id'] : null;
@@ -81,12 +77,11 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
     /**
      *
      * @param int $groupId
-     * @param string $token
      * @return array
      */
-    private function getFacebookPosts($groupId, $token)
+    private function getFacebookPosts($groupId)
     {
-        $groupsList = $this->request->makeGetRequest($token, $groupId . '/feed');
+        $groupsList = $this->request->makeGetRequest($groupId . '/feed');
 
         return array_key_exists('data', $groupsList)
             ? $groupsList['data']
@@ -97,10 +92,9 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      * Get list of facebook groups
      * @return array
      */
-    private function getFacebookGroups($token)
+    private function getFacebookGroups()
     {
         $groupsList = $this->request->makeGetRequest(
-            $token,
             'me/groups',
             'member_request_count,description,updated_time,name,owner'
         );
@@ -158,27 +152,8 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
     public function loadFacebookGroupInfo($groupId = 0)
     {
         return $this->request->makeGetRequest(
-            $this->token,
             $groupId,
             'name,description'
         );
-    }
-
-    /**
-     * update and get user token from request or from local storage
-     * @return string
-     */
-    private function updateUserToken()
-    {
-        $token = null;
-        
-        if ($_POST['fb_response']['authResponse']['accessToken']) {
-            $token = $_POST['fb_response']['authResponse']['accessToken'];
-            update_user_meta(get_current_user_id(), 'fb-token', $token);
-        } else {
-            $token = get_user_meta(get_current_user_id(), 'fb-token', true);
-        }
-        
-        return $token;
     }
 }

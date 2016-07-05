@@ -1,0 +1,9 @@
+{
+  "0": {
+    "action": "manage_fb_post_posts_columns",
+    "scope": null,
+    "method": "setCustomPostList",
+    "priority": 10,
+    "accepted_args": 1
+  }
+}

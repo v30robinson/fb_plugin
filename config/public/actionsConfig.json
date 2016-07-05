@@ -1,0 +1,23 @@
+{
+  "0": {
+    "action": "fbl/after_login",
+    "scope": null,
+    "method": "saveFacebookGroups",
+    "priority": 10,
+    "accepted_args": 2
+  },
+  "1": {
+    "action": "parse_request",
+    "scope": null,
+    "method": "parseAllForms",
+    "priority": 10,
+    "accepted_args": 1
+  },
+  "2": {
+    "action": "wp",
+    "scope": "template",
+    "method": "insertJSAndStyle",
+    "priority": 10,
+    "accepted_args": 1
+  }
+}
