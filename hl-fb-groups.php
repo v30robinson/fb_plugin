@@ -33,18 +33,54 @@ if (!defined('WPINC')) {
     die;
 }
 
+function isPluginInstalled()
+{
+    return file_exists(plugin_dir_path( __FILE__ ) . 'vendor/autoload.php');
+}
+
 /**
- * The code that runs during plugin activation.
+ * Check plugin dependency
+ * @return bool
  */
-function activate_hl_fb_groups()
+function checkPluginDependency()
 {
     if (!is_plugin_active('wp-facebook-login/facebook-login.php')) {
         echo '<b>Dependency error!</b> 
               For plugin work need to install and activate 
               <a href="https://wordpress.org/plugins/wp-facebook-login/" target="_blank">Facebook Login</a> plugin!
              ';
-        exit();
+        return false;
     }
+    return true;
+}
+
+/**
+ * Check composer dependency
+ * @return bool
+ */
+function checkComposerDependency()
+{
+    if (!defined('HL_COMPOSER')) {
+        echo '<b>Composer error!</b> 
+              You need to add <b>HL_COMPOSER</b> const to the WordPress config with path to composer file. It\'s needed 
+              for installing plugin dependency (twig and etc.)
+              ';
+        return false;
+    }
+    return true;
+}
+
+/**
+ * The code that runs during plugin activation.
+ */
+function activate_hl_fb_groups()
+{
+    if (checkPluginDependency() && checkComposerDependency()) {
+        putenv("COMPOSER_HOME=" . HL_COMPOSER . '.composer');
+        exec('(cd ' . plugin_dir_path(__FILE__) .' && php ' . HL_COMPOSER . 'composer install) 2>&1');
+        return;
+    }
+    exit();
 }
 
 /**
@@ -71,7 +107,13 @@ function includeClasses()
     require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-template.php';
     require_once plugin_dir_path( __FILE__ ) . 'admin/class-hl-fb-groups-admin.php';
     require_once plugin_dir_path( __FILE__ ) . 'public/class-hl-fb-groups-public.php';
+}
 
+/**
+ * Init core lib and setup activate/deactivate setting
+ */
+function includeCore()
+{
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
     register_activation_hook( __FILE__, 'activate_hl_fb_groups');
@@ -87,12 +129,13 @@ function includeClasses()
  */
 function runPlugin()
 {
-    if (is_plugin_active('wp-facebook-login/facebook-login.php')) {
+    if (isPluginInstalled() && is_plugin_active('wp-facebook-login/facebook-login.php')) {
+        includeClasses();
         $public = new HLGroupsPublic();
         $admin  = new HLGroupsAdmin();
         return;
     }
 }
 
-includeClasses();
+includeCore();
 runPlugin();
