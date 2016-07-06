@@ -68,4 +68,12 @@ class HLGroupsPublic extends HLGroupsCore
     {
         $this->template->insertJSAndStyleAction();
     }
+
+    /**
+     * initialization custom post types
+     */
+    public function initPostTypesAction()
+    {
+        $this->initPostTypes();
+    }
 }

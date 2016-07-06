@@ -38,11 +38,12 @@ class HLGroupsRequest
      * Make GET request to Facebook API using endpoint
      * @param string $endpoint
      * @param string $fields
+     * @param array $attr
      * @return array
      */
-    public function makeGetRequest($endpoint, $fields = '')
+    public function makeGetRequest($endpoint, $fields = '', $attr = [])
     {
-        $request  = wp_remote_get($this->createUrl($endpoint, $fields));
+        $request  = wp_remote_get($this->createUrl($endpoint, $fields, $attr));
         return $this->parseRequest($request);
     }
 

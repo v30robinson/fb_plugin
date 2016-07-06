@@ -35,10 +35,31 @@
     "accepted_args": 1
   },
   "5": {
+    "action": "admin_enqueue_scripts",
+    "scope": null,
+    "method": "adminLibs",
+    "priority": 100,
+    "accepted_args": 1
+  },
+  "6": {
     "action": "fbl/after_login",
     "scope": null,
     "method": "saveFacebookGroups",
     "priority": 10,
     "accepted_args": 2
+  },
+  "7": {
+    "action": "admin_menu",
+    "scope": null,
+    "method": "createWidgetMenu",
+    "priority": 10,
+    "accepted_args": 1
+  },
+  "8": {
+    "action": "wp_ajax_search_group",
+    "scope": null,
+    "method": "searchGroups",
+    "priority": 10,
+    "accepted_args": 1
   }
 }

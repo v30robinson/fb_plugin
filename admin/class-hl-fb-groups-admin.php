@@ -36,21 +36,6 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
-     * initialization custom post types
-     */
-    public function initPostTypesAction()
-    {
-        foreach ($this->getConfig('postType') as $key => $postType) {
-            register_post_type($key, [
-                'labels'      => $postType->labels,
-                'public'      => $postType->public,
-                'has_archive' => $postType->has_archive,
-                'supports'    => $postType->supports
-            ]);
-        }
-    }
-
-    /**
      * Add new columns for default Wordpress list of posts.
      * @param $columns
      * @return mixed
@@ -90,6 +75,53 @@ class HLGroupsAdmin extends HLGroupsCore
     }
 
     /**
+     * Init endpoint for ajax search Facebook groups;
+     * send json with groups list.
+     */
+    public function searchGroupsAction()
+    {
+        if (array_key_exists('search', $_REQUEST)) {
+            $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
+            $facebook = new HLGroupsFacebookManager();
+            wp_send_json($facebook->findFacebookGroups($_REQUEST['search'], $nextCode));
+        }
+    }
+    
+    /**
+     * Create menu item in the admin area
+     */
+    public function createWidgetMenuAction()
+    {
+        foreach ($this->getConfig('admin/menus') as $item) {
+            $this->initMenuPage($item);
+        }
+    }
+
+    /**
+     * Create facebook widget page in the admin area
+     */
+    public function createWidgetPageAction()
+    {
+        $this->template->render('group-search', []);
+    }
+    
+    /**
+     * Register the stylesheets and js for the admin area.
+     */
+    public function adminLibsAction()
+    {
+        $this->template->insertJSAndStyleAction();
+    }
+
+    /**
+     * initialization custom post types
+     */
+    public function initPostTypesAction()
+    {
+        $this->initPostTypes();
+    }
+
+    /**
      * Edit current Wordpress list for Facebook Posts
      * @param $column - current column for editing
      * @param $postId
@@ -111,13 +143,5 @@ class HLGroupsAdmin extends HLGroupsCore
                 echo '<abbr title> ' . $date . '</abbr>';
                 break;
         }
-    }
-    
-    /**
-     * Register the stylesheets and js for the admin area.
-     */
-    public function adminLibsAction()
-    {
-        $this->template->insertJSAndStyleAction();
     }
 }

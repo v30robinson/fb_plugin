@@ -1,0 +1,49 @@
+.wrap .widget-table,
+.wrap .widget-results,
+.wrap .widget-info {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin-top: 20px;
+  padding: 0.7em 2em 1em;
+  position: relative; }
+  .wrap .widget-table form,
+  .wrap .widget-results form,
+  .wrap .widget-info form {
+    margin: 20px 0 8px;
+    position: relative;
+    vertical-align: top;
+    z-index: 1; }
+    .wrap .widget-table form button,
+    .wrap .widget-results form button,
+    .wrap .widget-info form button {
+      border-radius: 0 !important;
+      box-shadow: none !important; }
+    .wrap .widget-table form input[type="text"],
+    .wrap .widget-results form input[type="text"],
+    .wrap .widget-info form input[type="text"] {
+      height: 31px;
+      width: 25%; }
+.wrap .widget-results,
+.wrap .widget-table {
+  display: none; }
+.wrap .widget-table {
+  padding: 0; }
+  .wrap .widget-table table {
+    border: 0;
+    box-shadow: none; }
+  .wrap .widget-table a.load-more {
+    background-color: #23282d;
+    border: 1px solid;
+    color: white;
+    display: inline-block;
+    font-weight: bold;
+    height: 32px;
+    padding-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    width: calc(100% - 2px); }
+    .wrap .widget-table a.load-more:hover {
+      background-color: #566773; }
+
+/*# sourceMappingURL=hl-fb-groups.css.map */

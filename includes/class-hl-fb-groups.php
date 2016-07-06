@@ -87,6 +87,38 @@ class HLGroupsCore
     }
 
     /**
+     * Create menu page in the admin area
+     * @param object $item
+     */
+    protected function initMenuPage($item)
+    {
+        add_menu_page(
+            $item->parent,
+            $item->name,
+            'manage_options',
+            $item->slug,
+            $this->getCallbackFuncByName($item->method . 'Action', $item->scope),
+            $item->icon,
+            $item->position
+        );
+    }
+
+    /**
+     * initialization of plugin post types
+     */
+    protected function initPostTypes()
+    {
+        foreach ($this->getConfig('postType') as $key => $postType) {
+            register_post_type($key, [
+                'labels'      => $postType->labels,
+                'public'      => $postType->public,
+                'has_archive' => $postType->has_archive,
+                'supports'    => $postType->supports
+            ]);
+        }
+    }
+
+    /**
      * Get plugin config by file name
      * @param string $name
      * @return array|mixed|object

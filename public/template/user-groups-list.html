@@ -1,34 +1,36 @@
-<div class="groups-list">
-    {% for key, group in groups %}
-        <div class="group-container">
-            <div class="group-title">
-                <b>Group name</b>: {{ group.title }}
-            </div>
-            <div class="group-description">
-                <b>Group description</b>: {{ group.description }}
-            </div>
-            <div class="group-posts">
-                {% for key, post in group.posts %}
-                    <div class="post-container">
-                        <div class="post-title">
-                            <b>Post name</b>: {{ post.title }}
-                        </div>
-                        {% if post.description %}
-                            <div class="post-description">
-                                <b>Post message</b>: {{ post.description }}
+{% if groups|length > 0 %}
+    <div class="groups-list">
+        {% for key, group in groups %}
+            <div class="group-container">
+                <div class="group-title">
+                    <b>Group name</b>: {{ group.title }}
+                </div>
+                <div class="group-description">
+                    <b>Group description</b>: {{ group.description }}
+                </div>
+                <div class="group-posts">
+                    {% for key, post in group.posts %}
+                        <div class="post-container">
+                            <div class="post-title">
+                                <b>Post name</b>: {{ post.title }}
                             </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+                            {% if post.description %}
+                                <div class="post-description">
+                                    <b>Post message</b>: {{ post.description }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="group-new-post">
+                    <form action="{{ formUrl }}" name="fb-post" method="post">
+                        <input type="hidden" name="fb-group-id" value="{{ group.id }}">
+                        <label for="fb-group-post"></label>
+                        <textarea name="fb-group-post" id="fb-group-post" required></textarea>
+                        <button type="submit">Send post to {{ group.title }} group</button>
+                    </form>
+                </div>
             </div>
-            <div class="group-new-post">
-                <form action="{{ formUrl }}" name="fb-post" method="post">
-                    <input type="hidden" name="fb-group-id" value="{{ group.id }}">
-                    <label for="fb-group-post"></label>
-                    <textarea name="fb-group-post" id="fb-group-post" required></textarea>
-                    <button type="submit">Send post to {{ group.title }} group</button>
-                </form>
-            </div>
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+{% endif %}

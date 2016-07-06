@@ -158,4 +158,29 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
             'name,description'
         );
     }
+
+    /**
+     * Find Facebook Groups By name
+     * @param string $text
+     * @param string|null $after
+     * @return array
+     * @todo need refactoring this method
+     */
+    public function findFacebookGroups($text, $after = null)
+    {
+        $response = $this->request->makeGetRequest('search', '', [
+            'q'     => $text,
+            'type'  => 'group',
+            'after' => $after
+        ]);
+
+        if (array_key_exists('data', $response)) {
+            return [
+                'data'   => $response['data'],
+                'paging' => $response['paging']
+            ];
+        }
+
+        return null;
+    }
 }

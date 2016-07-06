@@ -12,5 +12,12 @@
     "method": "publicLibs",
     "priority": 10,
     "accepted_args": 1
+  },
+  "2": {
+    "action": "init",
+    "scope": null,
+    "method": "initPostTypes",
+    "priority": 10,
+    "accepted_args": 1
   }
 }

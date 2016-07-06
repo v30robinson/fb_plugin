@@ -131,9 +131,7 @@ function runPlugin()
 {
     if (isPluginInstalled() && is_plugin_active('wp-facebook-login/facebook-login.php')) {
         includeClasses();
-
-        $admin  = new HLGroupsAdmin();
-        $public = new HLGroupsPublic();
+        $plugin = !is_admin() ? new HLGroupsPublic() : new HLGroupsAdmin();
     }
 }
 

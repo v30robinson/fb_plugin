@@ -1,0 +1,11 @@
+{
+  "0": {
+    "parent": null,
+    "name": "Facebook widget",
+    "slug": "facebook-widget",
+    "method": "createWidgetPage",
+    "scope": null,
+    "icon": "",
+    "position": 25
+  }
+}

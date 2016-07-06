@@ -1,0 +1,58 @@
+.wrap {
+  .widget-table,
+  .widget-results,
+  .widget-info {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin-top: 20px;
+    padding: 0.7em 2em 1em;
+    position: relative;
+
+    form {
+      margin: 20px 0 8px;
+      position: relative;
+      vertical-align: top;
+      z-index: 1;
+
+      button {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      input[type="text"] {
+        height: 31px;
+        width: 25%;
+      }
+    }
+  }
+
+  .widget-results,
+  .widget-table { display: none; }
+
+  .widget-table {
+    padding: 0;
+
+    table {
+      border: 0;
+      box-shadow: none;
+    }
+
+    a.load-more {
+      background-color: #23282d;
+      border: 1px solid;
+      color: white;
+      display: inline-block;
+      font-weight: bold;
+      height: 32px;
+      padding-top: 10px;
+      text-align: center;
+      text-decoration: none;
+      width: calc(100% - 2px);
+
+      &:hover {
+        background-color: #566773;
+      }
+    }
+  }
+}
