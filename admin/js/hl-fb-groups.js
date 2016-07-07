@@ -1,14 +1,16 @@
 (function($) {
-    /**
-     * Scope vars
-     * @types {null}
-     */
+
     let widgetResultDiv = null,
         loadMoreButton = null,
         widgetInfoDiv = null,
-        groupsPerPage = 25,
         resultTable = null,
         widgetForm = null;
+
+    let config = {
+        addLocalGroupEndpoint: '/wp-admin/admin-ajax.php?action=add_public_group',
+        searchEndpoint: '/wp-admin/admin-ajax.php?action=search_group',
+        groupsPerPage: 25
+    };
 
     /**
      * Waiting for submit search form and get facebook group from API
@@ -50,7 +52,7 @@
      */
     function saveGroupToLocalStorage(selector, data) {
         $.ajax({
-            url: "/wp-admin/admin-ajax.php?action=add_public_group",
+            url: config.addLocalGroupEndpoint,
             data: data,
             success: () => {
                 selector.parent().html(createLocalStorageLink(true));
@@ -80,7 +82,7 @@
      */
     function getGroupList(searchField, more = null) {
         $.ajax({
-            url: "/wp-admin/admin-ajax.php?action=search_group",
+            url: config.searchEndpoint,
             data: {
                 search: searchField,
                 after: more
@@ -101,7 +103,7 @@
      * @param {int} resultCount
      */
     function toggedLoadMoreButton(searchField, navigation, resultCount) {
-        if (resultCount == groupsPerPage) {
+        if (resultCount == config.groupsPerPage) {
             loadMoreButton.data('search', searchField);
             loadMoreButton.data('next', navigation.cursors.after);
             loadMoreButton.show();
@@ -207,20 +209,26 @@
 
         return `<b>Already exist</b>`;
     }
-    
-    /**
-     * run after page was loaded
-     */
-    $(document).ready(function() {
 
+    /**
+     * Init working variable
+     */
+    function setWorkingVar() {
         widgetResultDiv = $('.widget-results');
         loadMoreButton = $('a.load-more');
         widgetInfoDiv = $('.widget-info');
         resultTable = $('table.wp-list-table');
         widgetForm = $('.widget-info form');
-
+    }
+    
+    /**
+     * run after page was loaded
+     */
+    $(document).ready(function() {
+        setWorkingVar();
         findGroupByName(widgetForm);
         loadMoreGroup(loadMoreButton);
         addGroupToLocalStorage();
     });
+
 })(jQuery);

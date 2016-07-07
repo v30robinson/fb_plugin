@@ -85,6 +85,7 @@ class HLGroupsAdmin extends HLGroupsCore
     /**
      * Init endpoint for ajax search Facebook groups;
      * send json with groups list.
+     * @todo need refactoring
      */
     public function searchGroupsAction()
     {
