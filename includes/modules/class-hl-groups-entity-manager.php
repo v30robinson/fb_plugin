@@ -12,19 +12,8 @@
  * @package        hl-groups
  * @subpackage     hl-groups/local-entity-manager
  */
-class HLGroupsEntityManager
+class HLGroupsEntityManager extends HLGroupsConfig
 {
-    /** @var stdClass of config options */
-    protected $config;
-
-    public function __construct()
-    {
-        $this->config = new stdClass();
-        $this->config->userGroupType   = 'fb_group';
-        $this->config->userPostsType   = 'fb_post';
-        $this->config->publicGroupType = 'fb_group_public';
-    }
-
     /**
      * Create new entity or update if exists
      * 
@@ -126,11 +115,11 @@ class HLGroupsEntityManager
     protected function findEntitiesByIds($ids = [])
     {
         return get_posts([
-            'post_type'      => $this->config->publicGroupType,
+            'post_type'      => $this->config('publicGroupType'),
             'posts_per_page' => 1000,
             'meta_query'     => [
                 [
-                    'key'     => $this->config->publicGroupType,
+                    'key'     => $this->config('publicGroupType'),
                     'value'   => $ids,
                     'compare' => 'IN',
                 ]

@@ -12,15 +12,10 @@
  * @package        hl-fb-groups
  * @subpackage     hl-fb-groups/request
  */
-class HLGroupsRequest
+class HLGroupsRequest extends HLGroupsConfig
 {
     /** @var string */
     private $token;
-
-    public function __construct()
-    {
-        $this->token = $this->updateUserToken();
-    }
 
     /**
      * Make POST request to Facebook API using endpoint
@@ -48,8 +43,20 @@ class HLGroupsRequest
     }
 
     /**
-     * update local user token from request
+     * get local user token
      * @return string
+     */
+    private function getUserToken()
+    {
+        if (!$this->token) {
+            $this->token = $this->updateUserToken();
+        }
+        return $this->token;
+    }
+
+    /**
+     * Update local token for work with Facebook API
+     * @return mixed
      */
     private function updateUserToken()
     {
@@ -60,7 +67,6 @@ class HLGroupsRequest
                 $_POST['fb_response']['authResponse']['accessToken']
             );
         }
-
         return get_user_meta(get_current_user_id(), 'fb-token', true);
     }
 
@@ -116,13 +122,13 @@ class HLGroupsRequest
     private function createUrl($endpoint, $fields = '', $attr = [])
     {
         $requestUrl = array_merge($attr, [
-            'access_token' => $this->token,
+            'access_token' => $this->getUserToken(),
             'fields'       => $fields
         ]);
         
         return add_query_arg(
             $requestUrl,
-            'https://graph.facebook.com/v2.6/' . $endpoint
+            $this->config('facebookApi') . $endpoint
         );
     }
 

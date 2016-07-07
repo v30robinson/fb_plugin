@@ -13,29 +13,13 @@
  * @package        hl-fb-groups
  * @subpackage     hl-fb-groups/template
  */
-class HLGroupsTemplate
+class HLGroupsTemplate extends HLGroupsConfig
 {
     /** @var $instance */
     private static $instance;
-
-    /** @var array */
-    private $config;
-
+    
     /** @var Twig_Environment $twig class */
     private $twig;
-
-    /**
-     * HLMembershipTemplate constructor
-     * Setup config for work this twig engine
-     */
-    private function __construct()
-    {
-        $pluginType   = is_admin() ? 'admin' : 'public';
-        $this->config = new stdClass();
-
-        $this->config->pluginPath = WP_PLUGIN_DIR . '/hl-fb-groups/' . $pluginType;
-        $this->config->pluginUrl  = plugins_url() . '/hl-fb-groups/' . $pluginType;
-    }
     
     /**
      * Get instance of the class
@@ -67,7 +51,7 @@ class HLGroupsTemplate
     {
         wp_enqueue_style(
             'hl-fb-groups-style',
-            $this->config->pluginUrl . '/css/hl-fb-groups.css'
+            $this->config('publicUrl') . '/css/hl-fb-groups.css'
         );
     }
 
@@ -78,8 +62,8 @@ class HLGroupsTemplate
     {
         wp_enqueue_script('jquery');
         wp_enqueue_script(
-            'hl-fb-groups-style',
-            $this->config->pluginUrl . '/js/hl-fb-groups.js'
+            'hl-fb-groups-script',
+            $this->config('publicUrl') . '/js/hl-fb-groups.js'
         );
     }
 
@@ -93,8 +77,8 @@ class HLGroupsTemplate
         wp_localize_script('some_handle', 'fbl', [
             'ajaxurl'  => admin_url('admin-ajax.php'),
             'site_url' => home_url(),
-            'scopes'   => 'email,public_profile,user_managed_groups,publish_actions',
-            'appId'    => get_option('fbl_settings')["fb_id"]
+            'scopes'   => $this->config('facebookScope'),
+            'appId'    => $this->config('facebookAppId')
         ]);
     }
 
@@ -115,9 +99,9 @@ class HLGroupsTemplate
     private function getTwig()
     {
         if (!$this->twig) {
-            $loader     = new Twig_Loader_Filesystem($this->config->pluginPath . '/template/');
+            $loader     = new Twig_Loader_Filesystem($this->config('currentPath') . 'template/');
             $this->twig = new Twig_Environment($loader, [
-                'cache' => $this->config->pluginPath . '/template/cache/',
+                'cache' => $this->config('currentPath') . 'template/cache/',
             ]);
         }
         return $this->twig;

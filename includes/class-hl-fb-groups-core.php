@@ -12,18 +12,26 @@
  * @package        hl-fb-groups
  * @subpackage     hl-fb-groups/core
  */
-class HLGroupsCore
+class HLGroupsCore extends HLGroupsConfig
 {
     /** @var HLGroupsTemplate */
     protected $template;
+    
+    /** @var HLGroupsFacebookManager */
+    protected $facebookManager;
 
-    /** @var stdClass of plugin config */
-    protected $plugin;
-        
+    /** @var HLGroupsLocalManager */
+    protected $localEntityManager;
+    
+    /** @var HLGroupsForm */
+    protected $formManager;
+    
     protected function __construct()
     {
-        $this->template = HLGroupsTemplate::getInstance();
-        $this->plugin = $this->setPluginInfo();
+        $this->template           = HLGroupsTemplate::getInstance();
+        $this->formManager        = new HLGroupsForm();
+        $this->facebookManager    = new HLGroupsFacebookManager();
+        $this->localEntityManager = new HLGroupsLocalManager();
     }
     
     /**
@@ -139,23 +147,10 @@ class HLGroupsCore
      */
     private function getConfigFilePath($name)
     {
-        $filePath = $this->plugin->path . 'config/' . $name . 'Config.json';
+        $filePath = $this->config('configFolder') . $name . 'Config.json';
 
         return file_exists($filePath) 
             ? $filePath
             : null;
-    }
-
-    /**
-     * Create plugin info
-     * @return stdClass of plugin info
-     */
-    private function setPluginInfo()
-    {
-        $config = new stdClass();
-        $config->name = 'hl-fb-groups';
-        $config->path = WP_PLUGIN_DIR . '/' . $config->name . '/';
-        $config->mode = !is_admin() ? 'public' : 'admin';
-        return $config;
     }
 }

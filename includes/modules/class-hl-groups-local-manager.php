@@ -23,7 +23,7 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
     {
         $groups = [];
         $customPosts = get_posts([
-            'post_type'   => $this->config->userGroupType,
+            'post_type'   => $this->config('userGroupType'),
             'author'      => $userId,
             'numberposts' => 1000,
             'orderby'     => 'date'
@@ -50,7 +50,7 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
     {
         $posts = [];
         $customPosts = get_posts([
-            'post_type'   => $this->config->userPostsType,
+            'post_type'   => $this->config('userPostsType'),
             'post_parent' => $groupId,
             'numberposts' => 1000,
             'orderby'     => 'date'
@@ -76,10 +76,10 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
         $group = $this->createLocalEntity(
             $data['name'],
             $data['description'],
-            $this->config->publicGroupType
+            $this->config('publicGroupType')
         );
 
-        $this->updateEntityMeta($group, $data, $this->config->publicGroupType);
+        $this->updateEntityMeta($group, $data, $this->config('publicGroupType'));
     }
 
     /**
@@ -92,14 +92,14 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
     {
         $posts = [];
         $customPosts = get_posts([
-            'post_type'      => $this->config->publicGroupType,
+            'post_type'      => $this->config('publicGroupType'),
             'posts_per_page' => $count,
             'offset'         => $offset,
             'orderby'        => 'date'
         ]);
 
         foreach ($customPosts as $post) {
-            $posts[] = $this->getLocalEntityMeta($post->ID, $this->config->publicGroupType);
+            $posts[] = $this->getLocalEntityMeta($post->ID, $this->config('publicGroupType'));
         }
 
         return $posts;
@@ -115,7 +115,7 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
         $result   = [];
 
         foreach ($entities as $entity) {
-            $result[] = get_post_meta($entity->ID, $this->config->publicGroupType, true);
+            $result[] = get_post_meta($entity->ID, $this->config('publicGroupType'), true);
         }
 
         return $result;
@@ -144,6 +144,6 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
      */
     public function countOfPublicGroupPages()
     {
-        return wp_count_posts($this->config->publicGroupType)->publish;
+        return wp_count_posts($this->config('publicGroupType'))->publish;
     }
 }

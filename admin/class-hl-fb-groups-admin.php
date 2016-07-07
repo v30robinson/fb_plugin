@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class for work with admin pages
+ * The admin-specific functionality of the plugin.
  *
  * @link           http://www.healerslibrary.com
  * @license        http://www.mev.com/license.txt
@@ -14,25 +14,31 @@
  */
 class HLGroupsAdmin extends HLGroupsCore
 {
+
     public function __construct()
     {
         parent::__construct();
         
-        $this->initActions($this->plugin->mode);
-        $this->initFilters($this->plugin->mode);
+        $this->initActions($this->config('currentMode'));
+        $this->initFilters($this->config('currentMode'));
     }
 
     /**
-     * Save user groups and posts to Wordpress DB as custom post type;
-     * Set current user (fix for Facebook Login plugin)
      * @param WP_User $user
      * @param int $userId
      */
-    public function saveFacebookGroupsAction($user, $userId)
+    public function updateCurrentUserAction($user, $userId)
     {
         wp_set_current_user($userId);
-        $customPostType = new HLGroupsFacebookManager();
-        $customPostType->loadFacebookGroups();
+    }
+    
+    /**
+     * Save user groups and posts to Wordpress DB as custom post type;
+     * Set current user (fix for Facebook Login plugin)
+     */
+    public function saveFacebookGroupsAction()
+    {
+        $this->facebookManager->loadFacebookGroups();
     }
 
     /**
@@ -57,8 +63,9 @@ class HLGroupsAdmin extends HLGroupsCore
     public function checkGroupEndpointAction()
     {
         if (array_key_exists('id', $_REQUEST)) {
-            $facebook = new HLGroupsFacebookManager();
-            wp_send_json($facebook->loadFacebookGroupInfo($_REQUEST['id']));
+            wp_send_json(
+                $this->facebookManager->loadFacebookGroupInfo($_REQUEST['id'])
+            );
         }
     }
 
@@ -69,8 +76,24 @@ class HLGroupsAdmin extends HLGroupsCore
     public function loadMoreEndpointAction()
     {
         if (array_key_exists('number', $_REQUEST)) {
-            $customPostType = new HLGroupsLocalManager();
-            wp_send_json($customPostType->getPublicGroupEntities($_REQUEST['number']));
+            wp_send_json(
+                $this->localEntityManager->getPublicGroupEntities($_REQUEST['number'])
+            );
+        }
+    }
+
+    /**
+     * Init endpoint for ajax search Facebook groups;
+     * send json with groups list.
+     */
+    public function searchGroupsAction()
+    {
+        if (array_key_exists('search', $_REQUEST)) {
+            $nextCode       = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
+            $facebookGroups = $this->facebookManager->findFacebookGroups($_REQUEST['search'], $nextCode);
+            $groupsId       = array_column($facebookGroups['data'], 'id');
+            $localEntities  = $this->localEntityManager->findLocalGroupsByIds($groupsId);
+            wp_send_json($this->localEntityManager->mergeLocalGroup($facebookGroups, $localEntities));
         }
     }
 
@@ -80,8 +103,7 @@ class HLGroupsAdmin extends HLGroupsCore
     public function addPublicGroupEndpointAction()
     {
         if (current_user_can('manage_options')) {
-            $userForms = new HLGroupsForm();
-            $userForms->parsePublicGroupForm($_REQUEST);
+            $this->formManager->parsePublicGroupForm($_REQUEST);
         }
     }
 
@@ -100,7 +122,7 @@ class HLGroupsAdmin extends HLGroupsCore
      */
     public function createWidgetPageAction()
     {
-        $this->template->render('group-search', []);
+        $this->template->render('group-search');
     }
 
     /**
@@ -117,24 +139,6 @@ class HLGroupsAdmin extends HLGroupsCore
     public function initPostTypesAction()
     {
         $this->initPostTypes();
-    }
-
-    /**
-     * Init endpoint for ajax search Facebook groups;
-     * send json with groups list.
-     */
-    public function searchGroupsAction()
-    {
-        $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
-
-        if (array_key_exists('search', $_REQUEST)) {
-            $facebook = new HLGroupsFacebookManager();
-            $entities = new HLGroupsLocalManager();
-
-            $facebookGroups = $facebook->findFacebookGroups($_REQUEST['search'], $nextCode);
-            $localEntities  = $entities->findLocalGroupsByIds(array_column($facebookGroups['data'], 'id'));
-            wp_send_json($entities->mergeLocalGroup($facebookGroups, $localEntities));
-        }
     }
 
     /**

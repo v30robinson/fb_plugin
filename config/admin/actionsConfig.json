@@ -44,25 +44,32 @@
   "6": {
     "action": "fbl/after_login",
     "scope": null,
-    "method": "saveFacebookGroups",
+    "method": "updateCurrentUser",
     "priority": 10,
     "accepted_args": 2
   },
   "7": {
+    "action": "fbl/after_login",
+    "scope": null,
+    "method": "saveFacebookGroups",
+    "priority": 20,
+    "accepted_args": 1
+  },
+  "8": {
     "action": "admin_menu",
     "scope": null,
     "method": "createWidgetMenu",
     "priority": 10,
     "accepted_args": 1
   },
-  "8": {
+  "9": {
     "action": "wp_ajax_search_group",
     "scope": null,
     "method": "searchGroups",
     "priority": 10,
     "accepted_args": 1
   },
-  "9": {
+  "10": {
     "action": "wp_ajax_add_public_group",
     "scope": null,
     "method": "addPublicGroupEndpoint",

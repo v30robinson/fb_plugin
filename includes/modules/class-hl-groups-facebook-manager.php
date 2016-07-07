@@ -18,9 +18,7 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
     private $request;
 
     public function __construct()
-    {
-        parent::__construct();
-        
+    {        
         $this->request = new HLGroupsRequest();
     }
 
@@ -51,12 +49,12 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      */
     public function pushFacebookPost($entity, $message)
     {
-        $group = get_post_meta($entity, $this->config->userGroupType, true);
+        $group = get_post_meta($entity, $this->config('userGroupType'), true);
         $post = $this->sendPostToFacebookGroup($group, $message);
 
         if ($post) {
             $postId = $group . '_' . $post;
-            $this->createLocalEntity('User Post', $message, $this->config->userPostsType, $postId, $entity);
+            $this->createLocalEntity('User Post', $message, $this->config('userPostsType'), $postId, $entity);
         }
     }
 
@@ -116,11 +114,11 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
         foreach ($groups as $group) {
             $entity = $this->createLocalEntity(
                 $group['name'], 
-                $group['description'], 
-                $this->config->userGroupType, 
+                $group['description'],
+                $this->config('userGroupType'), 
                 $group['id']
             );
-            $this->updateEntityMeta($entity, $group, $this->config->userGroupType);
+            $this->updateEntityMeta($entity, $group, $this->config('userGroupType'));
             $this->loadFacebookPost($group['id'], $entity);
         }
     }
@@ -136,12 +134,12 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
         foreach ($posts as $post) {
             $entity = $this->createLocalEntity(
                 array_key_exists('story', $post) ? $post['story'] : 'User Post', 
-                $post['message'], 
-                $this->config->userPostsType, 
+                $post['message'],
+                $this->config('userPostsType'), 
                 $post['id'],
                 $postId
             );
-            $this->updateEntityMeta($entity, $post, $this->config->userPostsType);
+            $this->updateEntityMeta($entity, $post, $this->config('userPostsType'));
         }
     }
 
