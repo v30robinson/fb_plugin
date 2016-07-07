@@ -20,7 +20,6 @@ abstract class HLGroupsConfig
     const publicGroupType = 'fb_group_public';
     const facebookApi     = 'https://graph.facebook.com/v2.6/';
     const facebookScope   = 'email,public_profile,user_managed_groups,publish_actions';
-
     
     /**
      * Get config entity by name

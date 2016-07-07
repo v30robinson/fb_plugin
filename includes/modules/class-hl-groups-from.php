@@ -44,6 +44,16 @@ class HLGroupsForm
     }
 
     /**
+     * Encode form data
+     * @param string $str
+     * @return string
+     */
+    private function encodeField($str)
+    {
+        return sanitize_text_field(stripslashes(htmlentities($str)));
+    }
+    
+    /**
      * Create group data for saving in the local storage
      * @param array $data
      * @return array
@@ -51,11 +61,11 @@ class HLGroupsForm
     private function createGroupFormData(array $data)
     {
         return [
-            'name'        => sanitize_text_field($data['fb-group-name']),
-            'description' => sanitize_text_field($data['fb-group-description']),
-            'url'         => sanitize_text_field($data['fb-group-url']),
-            'members'     => sanitize_text_field($data['fb-group-members']),
-            'id'          => sanitize_text_field($this->parseUrl($data['fb-group-url']))
+            'name'        => $this->encodeField($data['fb-group-name']),
+            'description' => $this->encodeField($data['fb-group-description']),
+            'url'         => $this->encodeField($data['fb-group-url']),
+            'members'     => $this->encodeField($data['fb-group-members']),
+            'id'          => $this->encodeField($this->parseUrl($data['fb-group-url']))
         ];
     }
 
