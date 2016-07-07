@@ -164,14 +164,13 @@ class HLGroupsFacebookManager extends HLGroupsEntityManager
      * @param string $text
      * @param string|null $after
      * @return array
-     * @todo need refactoring this method
      */
     public function findFacebookGroups($text, $after = null)
     {
-        $response = $this->request->makeGetRequest('search', '', [
-            'q'     => $text,
-            'type'  => 'group',
-            'after' => $after
+        $response = $this->request->makeGetRequest('search', 'id,name,description,privacy', [
+            'q'     => urlencode($text),
+            'after' => urlencode($after),
+            'type'  => 'group'
         ]);
 
         if (array_key_exists('data', $response)) {

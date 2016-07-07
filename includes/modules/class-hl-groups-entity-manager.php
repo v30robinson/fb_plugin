@@ -117,4 +117,24 @@ class HLGroupsEntityManager
 
         return count($posts) > 0 ? $posts[0]->ID : null;
     }
+
+    /**
+     * Fiend local entities by groups ids
+     * @param array $ids
+     * @return array
+     */
+    protected function findEntitiesByIds($ids = [])
+    {
+        return get_posts([
+            'post_type'      => $this->config->publicGroupType,
+            'posts_per_page' => 1000,
+            'meta_query'     => [
+                [
+                    'key'     => $this->config->publicGroupType,
+                    'value'   => $ids,
+                    'compare' => 'IN',
+                ]
+            ]
+        ]);
+    }
 }

@@ -13,7 +13,7 @@
             }
         });
     }
-    ytuuytu
+    
     function loadMorePublicGroup(selector) {
         selector.find('.load-more').on('click', function () {
             getPublicGroupFrom(

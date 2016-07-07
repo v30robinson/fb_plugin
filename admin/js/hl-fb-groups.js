@@ -3,7 +3,7 @@
      * Scope vars
      * @types {null}
      */
-    var widgetResultDiv = null,
+    let widgetResultDiv = null,
         loadMoreButton = null,
         widgetInfoDiv = null,
         groupsPerPage = 25,
@@ -16,6 +16,7 @@
      */
     function findGroupByName(form) {
         form.on('submit', function() {
+            resetResult();
             getGroupList($(this).find('input').val());
             return false;
         });
@@ -30,6 +31,46 @@
             getGroupList(button.data('search'), button.data('next'));
             return false;
         });
+    }
+
+    /**
+     * add event for AJAX adding new group to local storage
+     */
+    function addGroupToLocalStorage() {
+        $(document).on('click', 'a.addToLocalStorage', function () {
+            saveGroupToLocalStorage($(this), getGroupInfo($(this)));
+            return false;
+        });
+    }
+
+    /**
+     * AJAX call to endpoint for create new group entity in the local storage
+     * @param {Object} selector
+     * @param {Array} data
+     */
+    function saveGroupToLocalStorage(selector, data) {
+        $.ajax({
+            url: "/wp-admin/admin-ajax.php?action=add_public_group",
+            data: data,
+            success: () => {
+                selector.parent().html(createLocalStorageLink(true));
+            }
+        });
+    }
+
+    /**
+     * Get data from HTML row
+     * @param {Object} selector
+     * @returns {Array}
+     */
+    function getGroupInfo(selector) {
+        let row  = selector.closest('tr');
+        return {
+            'fb-group-name': row.find('.name').text(),
+            'fb-group-description': row.find('.description').text(),
+            'fb-group-url': row.find('.link a').attr('href'),
+            'fb-group-members': ''
+        };
     }
 
     /**
@@ -80,13 +121,20 @@
     }
 
     /**
+     * Reset all result for new search
+     */
+    function resetResult() {
+        resultTable.find('tbody').empty();
+        resultTable.parent().hide();
+    }
+    
+    /**
      * show result table if it's first load time
      * @returns {boolean}
      */
     function showResultTable() {
         if (!resultTable.find('tbody tr').length) {
             resultTable.parent().show();
-            resultTable.find('tbody').empty();
             widgetResultDiv.hide();
         }
         return true;
@@ -97,7 +145,7 @@
      * @returns {boolean}
      */
     function hideResultTable() {
-        resultTable.parent().hide();
+        resetResult();
         widgetResultDiv.show();
         return true;
     }
@@ -111,7 +159,7 @@
         if (groups && !groups['error']) {
             groups.forEach(group => {
                 table.find('tbody').append(
-                    createGroupRow(group['id'], group['name'], group['privacy'])
+                    createGroupRow(group['id'], group['name'], group['description'], group['privacy'], group['localExist'])
                 );
             });
         }
@@ -121,22 +169,43 @@
      * Create HTML entity for table with groups
      * @param {int} id
      * @param {string} name
+     * @param {string} description
      * @param {string} privacy
-     * @returns {HTML}
+     * @param {boolean} exist
+     * @returns {string}
      */
-    function createGroupRow(id, name, privacy) {
+    function createGroupRow(id, name, description, privacy, exist = false) {
         return `
             <tr>
-                <td>${id}</td>
-                <td>${name}</td>
-                <td>
-                    <a href="https://facebook.com/groups/${id}/" target="_blank">
-                        Join to ${name}
+                <td class="id">${id}</td>
+                <td class="exist">${createLocalStorageLink(exist)}</td>
+                <td class="name">${name}</td>
+                <td class="description">${description || ''}</td>
+                <td class="link">
+                    <a href="https://www.facebook.com/groups/${id}/" target="_blank">
+                        Open group
                      </a>
                 </td>
-                <td>${privacy}</td>
+                <td class="privacy">${privacy}</td>
             </tr>
         `;
+    }
+
+    /**
+     * Create HTML entity for local storage column
+     * @param {boolean} exist
+     * @returns {string}
+     */
+    function createLocalStorageLink(exist) {
+        if (!exist) {
+            return `
+                <a href="#" class="addToLocalStorage" target="_blank">
+                    Add to local storage
+                 </a>
+            `;
+        }
+
+        return `<b>Already exist</b>`;
     }
     
     /**
@@ -152,5 +221,6 @@
 
         findGroupByName(widgetForm);
         loadMoreGroup(loadMoreButton);
+        addGroupToLocalStorage();
     });
 })(jQuery);

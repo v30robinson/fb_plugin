@@ -5,8 +5,8 @@
         <p>Enter your search text in the search box of Facebook groups and click on the search button. In a positive result, you'll see a list of groups found.</p>
         <p>This feature is used to the administrator, who entered using the login through facebook, to carry out a search on Facebook groups and could join these groups.</p>
         <form>
-            <input type="text" placeholder="Enter words for search..." name="search" required minlength="4">
-            <button type="submit" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap" aria-expanded="false" aria-controls="pressthis-code-wrap" style="height: 32px;">
+            <input type="text" placeholder="Enter words for search..." name="search" required pattern=".{3,}" title="3 characters minimum">
+            <button type="submit" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap">
                 <span class="dashicons dashicons-update"></span>
             </button>
         </form>
@@ -18,17 +18,31 @@
     <div class="widget-table">
         <table class="wp-list-table widefat">
             <thead>
-            <tr>
-                <th class="manage-column"><b>Id</b></th>
-                <th class="manage-column"><b>Name</b></th>
-                <th class="manage-column"><b>Url</b></th>
-                <th class="manage-column"><b>Type</b></th>
-            </tr>
+                <tr>
+                    <th class="manage-column">
+                        <b>Id</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Local storage</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Name</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Description</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Url</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Type</b>
+                    </th>
+                </tr>
             </thead>
-            <tbody>
-
-            </tbody>
+            <tbody></tbody>
         </table>
-        <a href="#" class="load-more">Load more groups by your request...</a>
+        <div class="widget-button">
+            <a href="#" class="load-more">Load more groups by your request...</a>
+        </div>
     </div>
 </div>

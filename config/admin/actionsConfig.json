@@ -61,5 +61,12 @@
     "method": "searchGroups",
     "priority": 10,
     "accepted_args": 1
+  },
+  "9": {
+    "action": "wp_ajax_add_public_group",
+    "scope": null,
+    "method": "addPublicGroupEndpoint",
+    "priority": 10,
+    "accepted_args": 1
   }
 }

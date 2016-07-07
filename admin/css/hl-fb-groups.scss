@@ -36,6 +36,14 @@
     table {
       border: 0;
       box-shadow: none;
+
+      td.description {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 400px;
+      }
     }
 
     a.load-more {
@@ -44,8 +52,8 @@
       color: white;
       display: inline-block;
       font-weight: bold;
-      height: 32px;
-      padding-top: 10px;
+      height: 30px;
+      padding-top: 12px;
       text-align: center;
       text-decoration: none;
       width: calc(100% - 2px);

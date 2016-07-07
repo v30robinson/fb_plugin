@@ -106,6 +106,39 @@ class HLGroupsLocalManager extends HLGroupsEntityManager
     }
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function findLocalGroupsByIds($ids = [])
+    {
+        $entities = $this->findEntitiesByIds($ids);
+        $result   = [];
+
+        foreach ($entities as $entity) {
+            $result[] = get_post_meta($entity->ID, $this->config->publicGroupType, true);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Merge local groups with facebook public groups
+     * @param array $facebookGroups
+     * @param array $localEntities
+     * @return array
+     */
+    public function mergeLocalGroup($facebookGroups, $localEntities)
+    {
+        if (array_key_exists('data', $facebookGroups)) {
+            foreach ($facebookGroups['data'] as &$group) {
+                $group['localExist'] = in_array($group['id'], $localEntities);
+            }
+        }
+
+        return $facebookGroups;
+    }
+    
+    /**
      * Return count of publish public groups
      * @return int
      */
