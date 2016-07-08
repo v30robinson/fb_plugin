@@ -3,16 +3,16 @@
 /**
  * Class for work with local entities
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-groups
- * @subpackage     hl-groups/local-entity-manager
+ * @package        fb-groups
+ * @subpackage     fb-groups/local-entity-manager
  */
-class HLGroupsEntityManager extends HLGroupsConfig
+class FBGroupsEntityManager extends FBGroupsConfig
 {
     /**
      * Create new entity or update if exists

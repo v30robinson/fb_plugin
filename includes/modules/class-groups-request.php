@@ -3,16 +3,16 @@
 /**
  * Class for work with request
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
- * @subpackage     hl-fb-groups/request
+ * @package        fb-groups
+ * @subpackage     fb-groups/request
  */
-class HLGroupsRequest extends HLGroupsConfig
+class FBGroupsRequest extends FBGroupsConfig
 {
     /** @var string */
     private $token;

@@ -2,13 +2,13 @@
 /**
  * The plugin bootstrap file.
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
+ * @package        fb-groups
  *
  * This file is read by WordPress to generate the plugin information in the plugin
  * admin area. This file also includes all of the dependencies used by the plugin,
@@ -16,19 +16,19 @@
  * that starts the plugin.
  *
  * @wordpress-plugin
- * Plugin Name:    HealersLibrary Facebook Groups Plugin
+ * Plugin Name:    Facebook Groups
  * Plugin URI:     https://bitbucket.org/mev/healerslibrary-facebook-plugin
  * Description:    Plugin for work with Facebook user groups
  * Version:        1.0
- * Author:         Stanislav Vysotskyi and Nick Temple
- * Author URI:     http://www.healerslibrary.com
+ * Author:         Stanislav Vysotskyi, Nick Temple
+ * Author URI:     http://nicktemple.com/
  * License:        GPL-2.0+
  * License URI:    http://www.mev.com/license.txt
- * Text Domain:    hl-fb-groups
+ * Text Domain:    fb-groups
  *
  */
 
-class HLGroups
+class FBGroups
 {
     /**
      * Check, is plugin installed
@@ -61,9 +61,9 @@ class HLGroups
      */
     private  function checkComposerDependency()
     {
-        if (!defined('HL_COMPOSER')) {
+        if (!defined('FB_COMPOSER')) {
             echo '<b>Composer error!</b> 
-              You need to add <b>HL_COMPOSER</b> const to the WordPress config with path to composer file. It\'s needed 
+              You need to add <b>FB_COMPOSER</b> const to the WordPress config with path to composer file. It\'s needed 
               for installing plugin dependency (twig and etc.)
               ';
             return false;
@@ -74,11 +74,11 @@ class HLGroups
     /**
      * The code that runs during plugin activation.
      */
-    public function activate_hl_fb_groups()
+    public function activate_fb_groups()
     {
         if ($this->checkPluginDependency() && $this->checkComposerDependency()) {
-            putenv("COMPOSER_HOME=" . HL_COMPOSER . '.composer');
-            exec('(cd ' . plugin_dir_path(__FILE__) .' && php ' . HL_COMPOSER . 'composer install) 2>&1');
+            putenv("COMPOSER_HOME=" . FB_COMPOSER . '.composer');
+            exec('(cd ' . plugin_dir_path(__FILE__) .' && php ' . FB_COMPOSER . 'composer install) 2>&1');
             return;
         }
         exit();
@@ -87,7 +87,7 @@ class HLGroups
     /**
      * The code that runs during plugin deactivation.
      */
-    public function deactivate_hl_fb_groups()
+    public function deactivate_fb_groups()
     {
         exec('rm -rfv ' . plugin_dir_path(__FILE__) . 'vendor/*');
     }
@@ -99,16 +99,16 @@ class HLGroups
     private function includeClasses()
     {
         require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups-config.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/class-hl-fb-groups-core.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-entity-manager.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-facebook-manager.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-local-manager.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-from.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-request.php';
-        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-hl-groups-template.php';
-        require_once plugin_dir_path( __FILE__ ) . 'admin/class-hl-fb-groups-admin.php';
-        require_once plugin_dir_path( __FILE__ ) . 'public/class-hl-fb-groups-public.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-fb-groups-config.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-fb-groups-core.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-entity-manager.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-facebook-manager.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-local-manager.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-from.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-request.php';
+        require_once plugin_dir_path( __FILE__ ) . 'includes/modules/class-groups-template.php';
+        require_once plugin_dir_path( __FILE__ ) . 'admin/class-fb-groups-admin.php';
+        require_once plugin_dir_path( __FILE__ ) . 'public/class-fb-groups-public.php';
     }
 
     /**
@@ -117,9 +117,8 @@ class HLGroups
     public function initCore()
     {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
-
-        register_activation_hook( __FILE__, [$this, 'activate_hl_fb_groups']);
-        register_deactivation_hook( __FILE__, [$this, 'deactivate_hl_fb_groups']);
+        register_activation_hook( __FILE__, [$this, 'activate_fb_groups']);
+        register_deactivation_hook( __FILE__, [$this, 'deactivate_fb_groups']);
     }
 
     /**
@@ -132,13 +131,13 @@ class HLGroups
     {
         if ($this->isInstalled() && is_plugin_active('wp-facebook-login/facebook-login.php')) {
             $this->includeClasses();
-            $plugin = !is_admin() ? new HLGroupsPublic() : new HLGroupsAdmin();
+            $plugin = !is_admin() ? new FBGroupsPublic() : new FBGroupsAdmin();
         }
     }
 }
 
 if (defined('WPINC')) {
-    $plugin = new HLGroups();
+    $plugin = new FBGroups();
     $plugin->initCore();
     $plugin->run();
 }

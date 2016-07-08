@@ -4,16 +4,16 @@
  * Class for help work with templates
  * Can find template by name and show on the page
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
- * @subpackage     hl-fb-groups/template
+ * @package        fb-groups
+ * @subpackage     fb-groups/template
  */
-class HLGroupsTemplate extends HLGroupsConfig
+class FBGroupsTemplate extends FBGroupsConfig
 {
     /** @var $instance */
     private static $instance;
@@ -23,12 +23,12 @@ class HLGroupsTemplate extends HLGroupsConfig
     
     /**
      * Get instance of the class
-     * @return HLGroupsTemplate
+     * @return FBGroupsTemplate
      */
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new HLGroupsTemplate();
+            self::$instance = new FBGroupsTemplate();
         }
 
         return self::$instance;
@@ -50,8 +50,8 @@ class HLGroupsTemplate extends HLGroupsConfig
     private function insertStyles()
     {
         wp_enqueue_style(
-            'hl-fb-groups-style',
-            $this->config('publicUrl') . '/css/hl-fb-groups.css'
+            'fb-groups-style',
+            $this->config('publicUrl') . '/css/fb-groups.css'
         );
     }
 
@@ -62,8 +62,8 @@ class HLGroupsTemplate extends HLGroupsConfig
     {
         wp_enqueue_script('jquery');
         wp_enqueue_script(
-            'hl-fb-groups-script',
-            $this->config('publicUrl') . '/js/hl-fb-groups.js'
+            'fb-groups-script',
+            $this->config('publicUrl') . '/js/fb-groups.js'
         );
     }
 
@@ -108,7 +108,7 @@ class HLGroupsTemplate extends HLGroupsConfig
     }
 
     /**
-     * HLMembershipTemplate disable clone
+     * FBMembershipTemplate disable clone
      */
     private function __clone() {}
 }

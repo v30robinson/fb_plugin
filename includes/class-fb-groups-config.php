@@ -3,18 +3,18 @@
 /**
  * Plugin config file
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
- * @subpackage     hl-fb-groups/config
+ * @package        fb-groups
+ * @subpackage     fb-groups/config
  */
-abstract class HLGroupsConfig
+abstract class FBGroupsConfig
 {
-    const name            = 'hl-fb-groups';
+    const name            = 'fb-groups';
     const userGroupType   = 'fb_group';
     const userPostsType   = 'fb_post';
     const publicGroupType = 'fb_group_public';

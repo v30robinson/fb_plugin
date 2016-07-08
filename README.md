@@ -1,4 +1,4 @@
-# Healerslibrary Facebook Plugin #
+# Facebook Plugin #
 
 This plugin is an extension to the existing plugin Facebook Login for work with user groups.
 
@@ -27,7 +27,7 @@ This plugin is an extension to the existing plugin Facebook Login for work with 
         |- js           : js files for Public pages
         |- template     : static HTML contents for Public pages
      |- vendor          : dependence included via composer
-    hl-fb-groups.php    : bootstrap file for all classes of plugin
+    fb-groups.php    : bootstrap file for all classes of plugin
 
 ### 1.3. Project Installing###
 
@@ -40,5 +40,5 @@ For using this plugin you need to create virtual host for website, and install l
 After this, you need to clone this repository to **/wp-content/plugins/** folder and do next steps:
 
 
-    1. cd /wp-content/plugins/hl-fb-groups
+    1. cd /wp-content/plugins/fb-groups
     2. composer install

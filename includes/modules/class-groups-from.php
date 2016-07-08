@@ -3,16 +3,16 @@
 /**
  * Class for work with form data
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
- * @subpackage     hl-fb-groups/forms
+ * @package        fb-groups
+ * @subpackage     fb-groups/forms
  */
-class HLGroupsForm
+class FBGroupsForm
 {
     /**
      * Parse user post form and publish post in the FB group
@@ -21,7 +21,7 @@ class HLGroupsForm
     public function parseUserPostFrom($data)
     {
         if ($this->validateUserPost($data)) {
-            $facebookManager = new HLGroupsFacebookManager();
+            $facebookManager = new FBGroupsFacebookManager();
             $facebookManager->pushFacebookPost(
                 $data['fb-group-id'],
                 $data['fb-group-post']
@@ -36,7 +36,7 @@ class HLGroupsForm
     public function parsePublicGroupForm($data)
     {
         if ($this->validatePublicGroup($data)) {
-            $entityManager = new HLGroupsLocalManager();
+            $entityManager = new FBGroupsLocalManager();
             $entityManager->savePublicGroupEntity(
                 $this->createGroupFormData($data)
             );

@@ -3,16 +3,16 @@
 /**
  * Class for work with local groups and posts
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-groups
- * @subpackage     hl-groups/local-manager
+ * @package        fb-groups
+ * @subpackage     fb-groups/local-manager
  */
-class HLGroupsLocalManager extends HLGroupsEntityManager
+class FBGroupsLocalManager extends FBGroupsEntityManager
 {
     /**
      * Get all groups entities by user id

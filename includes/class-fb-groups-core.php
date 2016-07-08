@@ -3,35 +3,35 @@
 /**
  * Core plugin class
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-fb-groups
- * @subpackage     hl-fb-groups/core
+ * @package        fb-groups
+ * @subpackage     fb-groups/core
  */
-class HLGroupsCore extends HLGroupsConfig
+class FBGroupsCore extends FBGroupsConfig
 {
-    /** @var HLGroupsTemplate */
+    /** @var FBGroupsTemplate */
     protected $template;
     
-    /** @var HLGroupsFacebookManager */
+    /** @var FBGroupsFacebookManager */
     protected $facebookManager;
 
-    /** @var HLGroupsLocalManager */
+    /** @var FBGroupsLocalManager */
     protected $localEntityManager;
     
-    /** @var HLGroupsForm */
+    /** @var FBGroupsForm */
     protected $formManager;
     
     protected function __construct()
     {
-        $this->template           = HLGroupsTemplate::getInstance();
-        $this->formManager        = new HLGroupsForm();
-        $this->facebookManager    = new HLGroupsFacebookManager();
-        $this->localEntityManager = new HLGroupsLocalManager();
+        $this->template           = FBGroupsTemplate::getInstance();
+        $this->formManager        = new FBGroupsForm();
+        $this->facebookManager    = new FBGroupsFacebookManager();
+        $this->localEntityManager = new FBGroupsLocalManager();
     }
     
     /**

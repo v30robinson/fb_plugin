@@ -3,23 +3,23 @@
 /**
  * Class for work with facebook groups and posts
  *
- * @link           http://www.healerslibrary.com
+ * @link           http://nicktemple.com/
  * @license        http://www.mev.com/license.txt
  * @copyright      2016 by MEV, LLC
  * @since          1.0
  * @author         Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author         Nick Temple <nick@intellispire.com>
- * @package        hl-groups
- * @subpackage     hl-groups/facebook-manager
+ * @package        fb-groups
+ * @subpackage     fb-groups/facebook-manager
  */
-class HLGroupsFacebookManager extends HLGroupsEntityManager
+class FBGroupsFacebookManager extends FBGroupsEntityManager
 {
-    /** @var HLGroupsRequest */
+    /** @var FBGroupsRequest */
     private $request;
 
     public function __construct()
     {        
-        $this->request = new HLGroupsRequest();
+        $this->request = new FBGroupsRequest();
     }
 
     /**
