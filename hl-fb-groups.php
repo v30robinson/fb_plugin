@@ -75,7 +75,7 @@ class HLGroups
     /**
      * The code that runs during plugin activation.
      */
-    private function activate_hl_fb_groups()
+    public function activate_hl_fb_groups()
     {
         if ($this->checkPluginDependency() && $this->checkComposerDependency()) {
             putenv("COMPOSER_HOME=" . HL_COMPOSER . '.composer');
@@ -88,7 +88,7 @@ class HLGroups
     /**
      * The code that runs during plugin deactivation.
      */
-    private function deactivate_hl_fb_groups()
+    public function deactivate_hl_fb_groups()
     {
         exec('rm -rfv ' . plugin_dir_path(__FILE__) . 'vendor/*');
     }
