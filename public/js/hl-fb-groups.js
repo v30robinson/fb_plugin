@@ -1,15 +1,30 @@
 (function($) {
+
+    let config = {
+        loadMoreGroupEndpoint: '?action=get_group_list_from',
+        groupInfoEndpoint: '?action=get_group_info_by',
+        facebookGroupFormat: /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/
+    };
+
+    /**
+     * Added public ajax url for endpoint
+     * @param url
+     */
+    function addAjaxLinkToConfig(url) {
+        config.loadMoreGroupEndpoint = url + config.loadMoreGroupEndpoint;
+        config.groupInfoEndpoint = url + config.groupInfoEndpoint;
+    }
+
     /**
      * If input with focus or unfocused - need load info about group
      * @param {Object} groupUrlSelector
      */
     function getFacebookGroupInfo(groupUrlSelector) {
         groupUrlSelector.on('focusout', function () {
-            var facebookUrl = /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
-                value = $(this).val();
+            var value = $(this).val();
 
-            if (value.length && facebookUrl.test(value)) {
-                getGroupInfo(value.match(facebookUrl)[1]);
+            if (value.length && config.facebookGroupFormat.test(value)) {
+                getGroupInfo(value.match(config.facebookGroupFormat)[1]);
             }
         });
     }
@@ -30,7 +45,7 @@
      */
     function getPublicGroupFrom(selector, number) {
         $.ajax({
-            url: "/wp-admin/admin-ajax.php?action=get_group_list_from&number=" + number,
+            url: config.loadMoreGroupEndpoint + '&number=' + number,
             success: function (groups) {
                 groups.forEach(function (group) {
                     selector.find('.group-loader').before(
@@ -95,7 +110,7 @@
      */
     function getGroupInfo($groupId) {
         $.ajax({
-            url: "/wp-admin/admin-ajax.php?action=get_group_info_by&id=" + $groupId,
+            url: config.groupInfoEndpoint + "&id=" + $groupId,
             success: function (data) {
                 setInfoToField($('form[name="fb-group"]'), data);
             }
@@ -120,6 +135,7 @@
      * run after page was loaded
      */
     $(document).ready(function() {
+        addAjaxLinkToConfig(fbl.ajaxurl);
         getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"]'));
         loadMorePublicGroup($('.public-groups-list'));
     });

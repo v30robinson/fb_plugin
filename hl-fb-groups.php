@@ -30,7 +30,6 @@
 
 class HLGroups
 {
-
     /**
      * Check, is plugin installed
      * @return bool

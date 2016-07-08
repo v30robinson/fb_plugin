@@ -7,8 +7,8 @@
         widgetForm = null;
 
     let config = {
-        addLocalGroupEndpoint: '/wp-admin/admin-ajax.php?action=add_public_group',
-        searchEndpoint: '/wp-admin/admin-ajax.php?action=search_group',
+        addLocalGroupEndpoint: fbl.ajaxurl + '?action=add_public_group',
+        searchEndpoint: fbl.ajaxurl + '?action=search_group',
         groupsPerPage: 25
     };
 
