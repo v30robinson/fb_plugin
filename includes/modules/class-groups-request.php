@@ -100,6 +100,7 @@ class FBGroupsRequest extends FBGroupsConfig
     private function createResponseError(array $error = [])
     {
         if ($this->isTokenError($error)) {
+            update_user_meta(get_current_user_id(), 'fb-token', null);
             wp_logout();
         }
 

@@ -24,8 +24,10 @@
     .wrap .widget-info form input[type="text"] {
       height: 31px;
       width: 25%; }
-.wrap .widget-results,
-.wrap .widget-table {
+.wrap.public-search .widget-results,
+.wrap.public-search .widget-table {
+  display: none; }
+.wrap.local-storage .widget-results {
   display: none; }
 .wrap .widget-table {
   padding: 0; }

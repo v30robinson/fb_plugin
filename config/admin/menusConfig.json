@@ -1,11 +1,28 @@
 {
   "0": {
-    "parent": null,
     "name": "Facebook widget",
-    "slug": "facebook-widget",
-    "method": "createWidgetPage",
+    "slug": "facebook-search",
+    "method": null,
     "scope": null,
     "icon": "",
-    "position": 25
+    "position": 25,
+    "subMenus": {
+      "0": {
+        "parent": "facebook-search",
+        "pageTitle": "Search in the Facebook groups (public search)",
+        "menuTitle": "Public search",
+        "slug": "facebook-search",
+        "method": "publicSearch",
+        "scope": null
+      },
+      "1": {
+        "parent": "facebook-search",
+        "pageTitle": "Search in the Local storage groups (private search)",
+        "menuTitle": "Local storage",
+        "slug": "facebook-local-storage",
+        "method": "localStorage",
+        "scope": null
+      }
+    }
   }
 }

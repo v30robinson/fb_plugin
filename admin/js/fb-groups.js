@@ -1,14 +1,17 @@
 (function($) {
 
-    let widgetResultDiv = null,
+    let widgetPublicForm = null,
+        widgetLocalForm = null,
+        widgetResultDiv = null,
         loadMoreButton = null,
         widgetInfoDiv = null,
-        resultTable = null,
-        widgetForm = null;
+        resetButton = null,
+        resultTable = null;
 
     let config = {
         addLocalGroupEndpoint: fbl.ajaxurl + '?action=add_public_group',
         searchEndpoint: fbl.ajaxurl + '?action=search_group',
+        deleteGroupEndpoint: fbl.ajaxurl + '?action=delete_group',
         groupsPerPage: 25
     };
 
@@ -20,6 +23,26 @@
         form.on('submit', function() {
             resetResult();
             getGroupList($(this).find('input').val());
+            return false;
+        });
+    }
+    
+    /**
+     * Waiting for submit search form and get facebook group from API
+     * @param {Object} form - form selector
+     */
+    function findLocalGroupByName(form) {
+        form.on('submit', function() {
+            var result = $('td.name:containsCase("' + $(this).find('input').val() + '")');
+            if (result.length) {
+                widgetResultDiv.hide();
+                resultTable.parent().show();
+                resultTable.find('tbody tr').hide();
+                showFoundLocalResult(result);
+            } else {
+                resultTable.parent().hide();
+                widgetResultDiv.show();
+            }
             return false;
         });
     }
@@ -36,12 +59,73 @@
     }
 
     /**
+     * Reset local storage form by user click
+     * @param button
+     */
+    function resetLocalStorageForm(button) {
+        button.on('click', function() {
+            if ($('td.name').length > 0) {
+                widgetResultDiv.hide();
+                resultTable.parent().show();
+                resultTable.find('tbody tr').show();
+            } else {
+                resultTable.parent().hide();
+                widgetResultDiv.show();
+            }
+        });
+    }
+
+    /**
+     * Add event for AJAX deleting group from local storage
+     */
+    function deleteLocalGroup() {
+        $(document).on('click', 'a.deleteFromLocalStorage', function() {
+            deleteGroupById($(this).data('id'), $(this).closest('tr'));
+            return false;
+        });
+    }
+
+    /**
      * add event for AJAX adding new group to local storage
      */
     function addGroupToLocalStorage() {
         $(document).on('click', 'a.addToLocalStorage', function () {
             saveGroupToLocalStorage($(this), getGroupInfo($(this)));
             return false;
+        });
+    }
+
+    /**
+     * show found results in the table
+     * @param selectors
+     */
+    function showFoundLocalResult(selectors) {
+        selectors.each(function(){
+            $(this).parent().show();
+        });
+    }
+
+    /**
+     * Fix contains function for use in the other cases (Low or Up)
+     */
+    function fixForJquery() {
+        $.expr[':'].containsCase = function(a, i, m) {
+            return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+        };
+    }
+
+    /**
+     * Delete local group by group Id
+     * @param group
+     * @param selector
+     */
+    function deleteGroupById(group, selector) {
+        $.ajax({
+            type: 'delete',
+            url: config.deleteGroupEndpoint + "&groupId=" + group,
+            success: () => {
+                selector.remove();
+            }
         });
     }
 
@@ -58,21 +142,6 @@
                 selector.parent().html(createLocalStorageLink(true));
             }
         });
-    }
-
-    /**
-     * Get data from HTML row
-     * @param {Object} selector
-     * @returns {Array}
-     */
-    function getGroupInfo(selector) {
-        let row  = selector.closest('tr');
-        return {
-            'fb-group-name': row.find('.name').text(),
-            'fb-group-description': row.find('.description').text(),
-            'fb-group-url': row.find('.link a').attr('href'),
-            'fb-group-members': ''
-        };
     }
 
     /**
@@ -93,6 +162,21 @@
                 toggedLoadMoreButton(searchField, groups.paging, groups.data.length);
             }
         });
+    }
+
+    /**
+     * Get data from HTML row
+     * @param {Object} selector
+     * @returns {Array}
+     */
+    function getGroupInfo(selector) {
+        let row  = selector.closest('tr');
+        return {
+            'fb-group-name': row.find('.name').text(),
+            'fb-group-description': row.find('.description').text(),
+            'fb-group-url': row.find('.link a').attr('href'),
+            'fb-group-members': ''
+        };
     }
 
     /**
@@ -129,7 +213,7 @@
         resultTable.find('tbody').empty();
         resultTable.parent().hide();
     }
-    
+
     /**
      * show result table if it's first load time
      * @returns {boolean}
@@ -151,7 +235,7 @@
         widgetResultDiv.show();
         return true;
     }
-    
+
     /**
      * Create table with Facebook groups
      * @param {Object} table
@@ -218,17 +302,23 @@
         loadMoreButton = $('a.load-more');
         widgetInfoDiv = $('.widget-info');
         resultTable = $('table.wp-list-table');
-        widgetForm = $('.widget-info form');
+        widgetPublicForm = $('.public-search .widget-info form');
+        widgetLocalForm = $('.local-storage .widget-info form');
+        resetButton = $('button[type="reset"]');
     }
-    
+
     /**
      * run after page was loaded
      */
     $(document).ready(function() {
         setWorkingVar();
-        findGroupByName(widgetForm);
+        findLocalGroupByName(widgetLocalForm);
+        findGroupByName(widgetPublicForm);
         loadMoreGroup(loadMoreButton);
+        resetLocalStorageForm(resetButton);
         addGroupToLocalStorage();
+        deleteLocalGroup();
+        fixForJquery();
     });
 
 })(jQuery);

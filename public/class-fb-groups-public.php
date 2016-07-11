@@ -44,7 +44,8 @@ class FBGroupsPublic extends FBGroupsCore
             'groups'      => $this->localEntityManager->getPublicGroupEntities(),
             'groupsCount' => $this->localEntityManager->countOfPublicGroupPages(),
             'formUrl'     => $_SERVER['REQUEST_URI'],
-            'user'        => get_current_user_id()
+            'token'       => get_user_meta(get_current_user_id(), 'fb-token', true),
+            'user'        => get_current_user_id(),
         ]);
     }
 

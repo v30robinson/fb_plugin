@@ -68,7 +68,11 @@ class FBGroupsEntityManager extends FBGroupsConfig
     protected function getLocalEntityMeta($postId, $entityType)
     {
         $entityData = get_post_meta($postId, $entityType . '_data', true);
-        return unserialize($entityData);
+        $entity = array_merge(unserialize($entityData), [
+            'localId' => $postId
+        ]);
+        
+        return $entity;
     }
 
     /**

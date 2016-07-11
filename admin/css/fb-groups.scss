@@ -27,8 +27,14 @@
     }
   }
 
-  .widget-results,
-  .widget-table { display: none; }
+  &.public-search {
+    .widget-results,
+    .widget-table { display: none; }
+  }
+
+  &.local-storage {
+    .widget-results { display: none; }
+  }
 
   .widget-table {
     padding: 0;

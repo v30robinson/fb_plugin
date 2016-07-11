@@ -18,7 +18,7 @@ class FBGroupsAdmin extends FBGroupsCore
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->initActions($this->config('currentMode'));
         $this->initFilters($this->config('currentMode'));
     }
@@ -31,7 +31,7 @@ class FBGroupsAdmin extends FBGroupsCore
     {
         wp_set_current_user($userId);
     }
-    
+
     /**
      * Save user groups and posts to Wordpress DB as custom post type;
      * Set current user (fix for Facebook Login plugin)
@@ -50,12 +50,12 @@ class FBGroupsAdmin extends FBGroupsCore
     {
         return array_merge(
             $columns, [
-                'group'     => 'Group',
+                'group' => 'Group',
                 'published' => 'Published data'
             ]
         );
     }
-    
+
     /**
      * Init endpoint for ajax checking Facebook group;
      * send json this group info.
@@ -83,6 +83,19 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
+     * Init endpoint for ajax deleting local groups;
+     * send json with groups list.
+     */
+    public function deleteLocalGroupAction()
+    {
+        if (array_key_exists('groupId', $_REQUEST)) {
+            wp_send_json(
+                $this->localEntityManager->deleteLocalEntityById($_REQUEST['groupId'])
+            );
+        }
+    }
+
+    /**
      * Init endpoint for ajax search Facebook groups;
      * send json with groups list.
      * @todo need refactoring
@@ -90,10 +103,10 @@ class FBGroupsAdmin extends FBGroupsCore
     public function searchGroupsAction()
     {
         if (array_key_exists('search', $_REQUEST)) {
-            $nextCode       = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
+            $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
             $facebookGroups = $this->facebookManager->findFacebookGroups($_REQUEST['search'], $nextCode);
-            $groupsId       = array_column($facebookGroups['data'], 'id');
-            $localEntities  = $this->localEntityManager->findLocalGroupsByIds($groupsId);
+            $groupsId = array_column($facebookGroups['data'], 'id');
+            $localEntities = $this->localEntityManager->findLocalGroupsByIds($groupsId);
             wp_send_json($this->localEntityManager->mergeLocalGroup($facebookGroups, $localEntities));
         }
     }
@@ -113,19 +126,34 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function createWidgetMenuAction()
     {
-        foreach ($this->getConfig('admin/menus') as $item) {
-            $this->initMenuPage($item);
+        foreach ($this->getConfig('admin/menus') as $menu) {
+            $this->initMenuPage($menu);
+            foreach ($menu->subMenus as $subMenu) {
+                $this->initSubMenuPage($subMenu);
+            }
         }
     }
 
     /**
-     * Create facebook widget page in the admin area
+     * Display public facebook group search
      */
-    public function createWidgetPageAction()
+    public function publicSearchAction()
     {
-        $this->template->render('group-search');
+        $this->template->render('group-search', [
+            'token' => get_user_meta(get_current_user_id(), 'fb-token', true)
+        ]);
     }
 
+    /**
+     * Display local storage
+     */
+    public function localStorageAction()
+    {
+        $this->template->render('local-storage', [
+            'groups' => $this->localEntityManager->getPublicGroupEntities(0, 100000)
+        ]);
+    }
+    
     /**
      * Register the stylesheets and js for the admin area.
      */

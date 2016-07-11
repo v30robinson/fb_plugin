@@ -27,7 +27,6 @@
  * Text Domain:    fb-groups
  *
  */
-
 class FBGroups
 {
     /**

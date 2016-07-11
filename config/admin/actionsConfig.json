@@ -70,6 +70,13 @@
     "accepted_args": 1
   },
   "10": {
+    "action": "wp_ajax_delete_group",
+    "scope": null,
+    "method": "deleteLocalGroup",
+    "priority": 10,
+    "accepted_args": 1
+  },
+  "11": {
     "action": "wp_ajax_add_public_group",
     "scope": null,
     "method": "addPublicGroupEndpoint",

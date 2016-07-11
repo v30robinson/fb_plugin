@@ -146,4 +146,15 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
     {
         return wp_count_posts($this->config('publicGroupType'))->publish;
     }
+
+    /**
+     * Delete local Entity
+     * @param $entity
+     */
+    public function deleteLocalEntityById($entity)
+    {
+        if (get_post_status($entity) != false) {
+            wp_delete_post($entity, true);
+        }
+    }
 }

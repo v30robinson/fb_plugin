@@ -101,13 +101,29 @@ class FBGroupsCore extends FBGroupsConfig
     protected function initMenuPage($item)
     {
         add_menu_page(
-            $item->parent,
+            null,
             $item->name,
             'manage_options',
             $item->slug,
             $this->getCallbackFuncByName($item->method . 'Action', $item->scope),
             $item->icon,
             $item->position
+        );
+    }
+
+    /**
+     * Create submenu page in the admin area
+     * @param object $item
+     */
+    protected function initSubMenuPage($item)
+    {
+        add_submenu_page(
+            $item->parent,
+            $item->pageTitle,
+            $item->menuTitle, 
+            'manage_options',
+            $item->slug,
+            $this->getCallbackFuncByName($item->method . 'Action', $item->scope)
         );
     }
 

@@ -1,13 +1,19 @@
-<div class="wrap">
-    <h1>Facebook Admin Widget</h1>
+<div class="wrap public-search">
+    {% if token == null %}
+        <div class="error" id="message">
+            <p><b>Facebook access token is missing</b></p>
+            <p>To use the features of this plugin, you need to login the admin panel as a user of <strong>Facebook</strong> (need to use  Facebook Login). Your Facebook user should to be <strong>Admin</strong> in this Wordpress website (facebook user with admin rights in the Wordpress website).</p>
+        </div>
+    {% endif %}
+    <h1>Facebook Public search</h1>
     <div class="widget-info">
-        <h2>Search group into the Facebook Groups</h2>
+        <h2>Search group in the Facebook Groups</h2>
         <p>Enter your search text in the search box of Facebook groups and click on the search button. In a positive result, you'll see a list of groups found.</p>
-        <p>This feature is used to the administrator, who entered using the login through facebook, to carry out a search on Facebook groups and could join these groups.</p>
+        <p>This feature is used to the administrator, who entered using the login through facebook, to carry out a search on Facebook groups and could join these groups. </p>
         <form>
-            <input type="text" placeholder="Enter words for search..." name="search" required pattern=".{3,}" title="3 characters minimum">
-            <button type="submit" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap">
-                <span class="dashicons dashicons-update"></span>
+            <input type="text" placeholder="Enter words for search..." name="search" required pattern=".{3,}" title="3 characters minimum" {{ token ?: 'disabled' }}>
+            <button type="submit" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap" {{ token ?: 'disabled' }}>
+                <span class="dashicons dashicons-search"></span>
             </button>
         </form>
     </div>

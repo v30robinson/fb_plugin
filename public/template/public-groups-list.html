@@ -4,7 +4,7 @@
         <form action="{{ formUrl }}" name="fb-group" method="post">
             <label>
                 Facebook Group url:
-                <input type="text" name="fb-group-url" placeholder="Enter Facebook group url" required>
+                <input type="text" name="fb-group-url" class="{{ token ? 'hasToken' : '' }}" placeholder="Enter Facebook group url" required>
             </label>
             <label>
                 Facebook Group name:

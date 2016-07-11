@@ -1,0 +1,64 @@
+<div class="wrap local-storage">
+    <h1>Local storage search</h1>
+    <div class="widget-info">
+        <h2>Search group in the local storage (Wordpress website)</h2>
+        <p>Enter your search text in the search box of local storage and click on the search button. In a positive result, you'll see a list of groups found.</p>
+        <form>
+            <input type="text" placeholder="Enter words for search..." name="search" required pattern=".{3,}" title="3 characters minimum">
+            <button type="submit" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap">
+                <span class="dashicons dashicons-search"></span>
+            </button>
+            <button type="reset" class="button button-secondary pressthis-js-toggle js-show-pressthis-code-wrap">
+                <span class="dashicons dashicons-image-rotate"></span>
+            </button>
+        </form>
+    </div>
+    <div class="widget-results">
+        <h2 class="title">No result for display</h2>
+        <p>Please enter/edit your search request for showing group list.</p>
+    </div>
+    {% if groups|length > 0 %}
+        <div class="widget-table">
+            <table class="wp-list-table widefat">
+                <thead>
+                <tr>
+                    <th class="manage-column">
+                        <b>Id</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Local storage</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Name</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Description</b>
+                    </th>
+                    <th class="manage-column">
+                        <b>Url</b>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                        <tr>
+                            <td class="id">{{ group.id }}</td>
+                            <td class="exist">
+                                <a href="#" data-id="{{ group.localId }}" class="deleteFromLocalStorage">
+                                    Delete from local storage
+                                </a>
+                            </td>
+                            <td class="name">{{ group.name }}</td>
+                            <td class="description">{{ group.description }}</td>
+                            <td class="link">
+                                <a href="https://www.facebook.com/groups/{{ group.id }}/" target="_blank">
+                                    Open group
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>

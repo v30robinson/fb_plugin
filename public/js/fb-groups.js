@@ -136,7 +136,7 @@
      */
     $(document).ready(function() {
         addAjaxLinkToConfig(fbl.ajaxurl);
-        getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"]'));
+        getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"].hasToken'));
         loadMorePublicGroup($('.public-groups-list'));
     });
 })(jQuery);
