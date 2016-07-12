@@ -26,6 +26,16 @@
         </div>
         {% endif %}
     </div>
+    <div class="public-groups-search">
+        <form action="{{ formUrl }}" name="fb-group-search" method="post">
+            <input type="hidden" name="fb-group-search-status" value="0">
+            <label>
+                Print your search request:
+                <input type="text" name="fb-group-search" placeholder="Search request" required pattern=".{3,}" title="3 characters minimum">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+    </div>
     {% for key, group in groups %}
         <div class="group-container">
             <div class="group-title">

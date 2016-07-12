@@ -18,11 +18,19 @@
       button {
         border-radius: 0 !important;
         box-shadow: none !important;
+
+        &:disabled {
+          background-color: #eee !important;
+        }
       }
 
       input[type="text"] {
         height: 31px;
         width: 25%;
+
+        &:disabled {
+          background-color: #eee;
+        }
       }
     }
   }

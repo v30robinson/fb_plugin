@@ -82,5 +82,12 @@
     "method": "addPublicGroupEndpoint",
     "priority": 10,
     "accepted_args": 1
+  },
+  "12": {
+    "action": "wp_ajax_search_local_group_by",
+    "scope": null,
+    "method": "searchLocalGroup",
+    "priority": 10,
+    "accepted_args": 1
   }
 }

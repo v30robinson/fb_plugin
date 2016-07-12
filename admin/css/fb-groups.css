@@ -19,11 +19,19 @@
     .wrap .widget-info form button {
       border-radius: 0 !important;
       box-shadow: none !important; }
+      .wrap .widget-table form button:disabled,
+      .wrap .widget-results form button:disabled,
+      .wrap .widget-info form button:disabled {
+        background-color: #eee !important; }
     .wrap .widget-table form input[type="text"],
     .wrap .widget-results form input[type="text"],
     .wrap .widget-info form input[type="text"] {
       height: 31px;
       width: 25%; }
+      .wrap .widget-table form input[type="text"]:disabled,
+      .wrap .widget-results form input[type="text"]:disabled,
+      .wrap .widget-info form input[type="text"]:disabled {
+        background-color: #eee; }
 .wrap.public-search .widget-results,
 .wrap.public-search .widget-table {
   display: none; }

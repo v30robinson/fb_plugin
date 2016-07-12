@@ -75,9 +75,9 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function loadMoreEndpointAction()
     {
-        if (array_key_exists('number', $_REQUEST)) {
+        if (array_key_exists('page', $_REQUEST)) {
             wp_send_json(
-                $this->localEntityManager->getPublicGroupEntities($_REQUEST['number'])
+                $this->localEntityManager->getPublicGroupEntities($_REQUEST['page'])
             );
         }
     }
@@ -92,6 +92,19 @@ class FBGroupsAdmin extends FBGroupsCore
             wp_send_json(
                 $this->localEntityManager->deleteLocalEntityById($_REQUEST['groupId'])
             );
+        }
+    }
+
+    /**
+     * Init endpoint for ajax search local groups;
+     * send json with groups list.
+     */
+    public function searchLocalGroupAction()
+    {
+        if (array_key_exists('text', $_REQUEST) && array_key_exists('page', $_REQUEST)) {
+            $page = (int)$_REQUEST['page'] * 5;
+            $text = $_REQUEST['text'];
+            wp_send_json($this->localEntityManager->getPublicGroupEntities($page, 6, $text));
         }
     }
 

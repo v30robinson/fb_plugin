@@ -86,16 +86,18 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
      * Get all posts entities by group id
      * @param int $offset
      * @param int $count
+     * @param string $findBy
      * @return array
      */
-    public function getPublicGroupEntities($offset = 0, $count = 5)
+    public function getPublicGroupEntities($offset = 0, $count = 5, $findBy = '')
     {
         $posts = [];
         $customPosts = get_posts([
             'post_type'      => $this->config('publicGroupType'),
             'posts_per_page' => $count,
             'offset'         => $offset,
-            'orderby'        => 'date'
+            'orderby'        => 'date',
+            's'              => $findBy
         ]);
 
         foreach ($customPosts as $post) {

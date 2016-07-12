@@ -4,16 +4,22 @@
   background-color: #ccc;
   border: 1px solid #000;
   padding: 15px; }
+  .public-groups-list .public-groups-search,
   .public-groups-list .group-new-group,
+  .groups-list .public-groups-search,
   .groups-list .group-new-group {
     background-color: #fff;
     padding: 15px;
     margin-bottom: 15px; }
+    .public-groups-list .public-groups-search button,
     .public-groups-list .group-new-group button,
+    .groups-list .public-groups-search button,
     .groups-list .group-new-group button {
       width: 100%;
       margin-top: 10px; }
+    .public-groups-list .public-groups-search .no-logged-in,
     .public-groups-list .group-new-group .no-logged-in,
+    .groups-list .public-groups-search .no-logged-in,
     .groups-list .group-new-group .no-logged-in {
       font-size: 14px;
       color: #740500; }

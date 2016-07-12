@@ -3,7 +3,8 @@
     let config = {
         loadMoreGroupEndpoint: '?action=get_group_list_from',
         groupInfoEndpoint: '?action=get_group_info_by',
-        facebookGroupFormat: /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/
+        facebookGroupFormat: /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
+        searchEndpoint: '?action=search_local_group_by'
     };
 
     /**
@@ -13,6 +14,7 @@
     function addAjaxLinkToConfig(url) {
         config.loadMoreGroupEndpoint = url + config.loadMoreGroupEndpoint;
         config.groupInfoEndpoint = url + config.groupInfoEndpoint;
+        config.searchEndpoint = url + config.searchEndpoint;
     }
 
     /**
@@ -28,24 +30,35 @@
             }
         });
     }
-    
+
+    /**
+     * Load more groups
+     * @param selector
+     */
     function loadMorePublicGroup(selector) {
-        selector.find('.load-more').on('click', function () {
-            getPublicGroupFrom(
-                selector,
-                countOfDisplayedGroups(selector)
-            );
+        $(document).on('click', '.load-more',function () {
+            if ($(this).hasClass('search')) {
+                let searchForm = $('.public-groups-search form'),
+                    searchValue = searchForm.find('input[type="text"]').val(),
+                    searchPage = searchForm.find('input[type="hidden"]').val();
+
+                loadLocalGroupByTitle(searchPage, searchValue);
+
+            } else {
+                getPublicGroupFrom(selector, countOfDisplayedGroups(selector));
+            }
         });
     }
 
     /**
      * Get list of groups from number
      * @param {Object} selector
-     * @param {int} number
+     * @param {int} page
      */
-    function getPublicGroupFrom(selector, number) {
+    function getPublicGroupFrom(selector, page) {
         $.ajax({
-            url: config.loadMoreGroupEndpoint + '&number=' + number,
+            url: config.loadMoreGroupEndpoint,
+            data: { page: page },
             success: function (groups) {
                 groups.forEach(function (group) {
                     selector.find('.group-loader').before(
@@ -132,11 +145,87 @@
     }
 
     /**
+     * Clear groups list
+     */
+    function clearGroupsList() {
+        $('.public-groups-list').find('.group-container').remove();
+    }
+
+    /**
+     * insert first 5 item to page
+     * @param {Array} groups
+     */
+    function insertToList(groups) {
+        groups.forEach(function (group, key) {
+            if (key < 5) {
+                $('.public-groups-list').find('.group-loader').before(
+                    createGroupEntity(group['name'], group['url'], group['description'], group['members'])
+                );
+            }
+        });
+    }
+
+    /**
+     * Show/hide load more button
+     * @param {boolean} status
+     * @param {boolean} search
+     */
+    function toggleLoadMoreButton(status, search = false) {
+        $('.group-loader button')
+            .toggle(status)
+            .toggleClass('search', search);
+    }
+
+    /**
+     * Edit page counter in the search func
+     * @param {int} page
+     */
+    function editPageCounter(page) {
+        $('.public-groups-search form').find('input[type="hidden"]').val(page);
+    }
+
+    /**
+     * AJAX search by title of local group
+     * @param {int} page
+     * @param {string} text
+     */
+    function loadLocalGroupByTitle(page, text = '') {
+        $.ajax({
+            type: 'get',
+            url: config.searchEndpoint,
+            data: {
+                text: text,
+                page: page
+            },
+            success: (groups) => {
+                insertToList(groups);
+                toggleLoadMoreButton(groups.length > 5, text.length > 0);
+                editPageCounter(parseInt(page) + 1);
+            }
+        });
+    }
+
+    /**
+     * Do search by local group title
+     * @param {Object} form
+     */
+    function searchPublicGroup(form) {
+        form.on('submit', function () {
+            let searchValue = $(this).find('input[type="text"]').val();
+            clearGroupsList();
+            loadLocalGroupByTitle(0, searchValue);
+            return false;
+        });
+    }
+
+    /**
      * run after page was loaded
      */
     $(document).ready(function() {
         addAjaxLinkToConfig(fbl.ajaxurl);
         getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"].hasToken'));
         loadMorePublicGroup($('.public-groups-list'));
+        searchPublicGroup($('.public-groups-search form'));
+
     });
 })(jQuery);
