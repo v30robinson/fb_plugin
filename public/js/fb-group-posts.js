@@ -22,7 +22,7 @@ class groupsPost {
         this.config = config;
         this.endpoints = {
             loadMore: (group, offset) => {
-                return `/wp-admin/admin-ajax.php?action=get_posts&groupId=${group}&offset=${offset}`
+                return this.config.ajaxUrl + `?action=get_posts&groupId=${group}&offset=${offset}`
             }
         }
     }

@@ -243,6 +243,7 @@
 
         $('.group-container:has(.group-posts)').each(function () {
             var post = new groupsPost(jQuery, $(this), {
+                ajaxUrl: fbl.ajaxurl,
                 button: '.load-more-posts'
             });
             post.setLoadMoreEvent();
