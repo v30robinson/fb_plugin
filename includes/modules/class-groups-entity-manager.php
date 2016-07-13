@@ -130,4 +130,27 @@ class FBGroupsEntityManager extends FBGroupsConfig
             ]
         ]);
     }
+
+    /**
+     *
+     * @param $postType
+     * @param int $parent
+     */
+    protected function getOldEntities($postType, $parent = 0)
+    {
+
+        $oldPosts = get_posts([
+            'orderby'        => 'id',
+            'order'          => 'DESC',
+            'post_type'      => $postType,
+            'posts_per_page' => 1000,
+            'offset'         => 5,
+            'post_author'    => get_current_user_id(),
+            'post_parent'    => $parent
+        ]);
+
+        foreach ($oldPosts as $post) {
+            wp_delete_post($post->ID, true);
+        }
+    }
 }

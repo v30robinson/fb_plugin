@@ -40,7 +40,6 @@ class FBGroupsTemplate extends FBGroupsConfig
     public function insertJSAndStyleAction()
     {
         $this->insertStyles();
-        $this->insertScript();
         $this->insertFBLoginFix();
     }
 
@@ -56,15 +55,14 @@ class FBGroupsTemplate extends FBGroupsConfig
     }
 
     /**
-     * Insert scripts to the page
+     * Insert script to the page
+     * @param $id
+     * @param $path
+     * @param array $dependency
      */
-    private function insertScript()
+    public function insertScript($id, $path, $dependency = [])
     {
-        wp_enqueue_script('jquery');
-        wp_enqueue_script(
-            'fb-groups-script',
-            $this->config('publicUrl') . '/js/fb-groups.js'
-        );
+        wp_enqueue_script('fb-groups-script-' . $id,  $path, $dependency);
     }
 
     /**

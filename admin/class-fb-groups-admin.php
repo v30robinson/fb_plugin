@@ -34,11 +34,19 @@ class FBGroupsAdmin extends FBGroupsCore
 
     /**
      * Save user groups and posts to Wordpress DB as custom post type;
-     * Set current user (fix for Facebook Login plugin)
      */
     public function saveFacebookGroupsAction()
     {
         $this->facebookManager->loadFacebookGroups();
+    }
+
+    public function getGroupPostsAction()
+    {
+        if (array_key_exists('groupId', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
+            wp_send_json(
+                $this->facebookManager->getFacebookPosts($_REQUEST['groupId'], null, $_REQUEST['offset'])
+            );
+        }
     }
 
     /**
@@ -172,6 +180,7 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function adminLibsAction()
     {
+        $this->initScripts($this->config('currentMode'));
         $this->template->insertJSAndStyleAction();
     }
 

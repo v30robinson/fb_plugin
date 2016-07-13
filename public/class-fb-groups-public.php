@@ -63,6 +63,7 @@ class FBGroupsPublic extends FBGroupsCore
      */
     public function publicLibsAction()
     {
+        $this->initScripts($this->config('currentMode'));
         $this->template->insertJSAndStyleAction();
     }
 
@@ -72,5 +73,13 @@ class FBGroupsPublic extends FBGroupsCore
     public function initPostTypesAction()
     {
         $this->initPostTypes();
+    }
+    
+    /**
+     * Save user groups and posts to Wordpress DB as custom post type;
+     */
+    public function facebookSyncAction()
+    {
+        $this->facebookManager->loadFacebookGroups();
     }
 }

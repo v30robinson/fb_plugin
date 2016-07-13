@@ -11,9 +11,21 @@
     padding: 15px;
     margin-bottom: 15px;
 
-    button {
-      width: 100%;
-      margin-top: 10px;
+    form {
+      &.search {
+        button[type="reset"] {
+          display: block;
+        }
+      }
+
+      button[type="reset"] {
+        display: none;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 10px;
+      }
     }
 
     .no-logged-in {
@@ -41,11 +53,18 @@
       display: none;
     }
 
-    .post-container {
-      border: 1px solid #ccc;
-      margin: 12px 0;
-      padding: 10px;
-      font-size: 12px;
+    .group-posts {
+      .post-container {
+        border: 1px solid #ccc;
+        margin: 12px 0;
+        padding: 10px;
+        font-size: 12px;
+      }
+
+      .load-more-posts {
+        width: 100%;
+        margin-bottom: 10px;
+      }
     }
 
     .group-new-post {

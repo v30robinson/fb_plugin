@@ -34,7 +34,8 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
                 'id'          => $post->ID,
                 'title'       => $post->post_title,
                 'description' => $post->post_content,
-                'posts'       => $this->getPostEntities($post->ID)
+                'posts'       => $this->getPostEntities($post->ID),
+                'data'        => $this->getLocalEntityMeta($post->ID, $this->config('userGroupType'))
             ]);
         }
 
@@ -60,7 +61,7 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
             array_push($posts, [
                 'id'          => $post->ID,
                 'title'       => $post->post_title,
-                'description' => $post->post_content,
+                'description' => $post->post_content
             ]);
         }
 

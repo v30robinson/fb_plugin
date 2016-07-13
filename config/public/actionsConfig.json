@@ -19,5 +19,12 @@
     "method": "initPostTypes",
     "priority": 10,
     "accepted_args": 1
+  },
+  "3": {
+    "action": "parse_request",
+    "scope": null,
+    "method": "facebookSync",
+    "priority": 20,
+    "accepted_args": 1
   }
 }

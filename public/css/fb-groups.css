@@ -11,10 +11,20 @@
     background-color: #fff;
     padding: 15px;
     margin-bottom: 15px; }
-    .public-groups-list .public-groups-search button,
-    .public-groups-list .group-new-group button,
-    .groups-list .public-groups-search button,
-    .groups-list .group-new-group button {
+    .public-groups-list .public-groups-search form.search button[type="reset"],
+    .public-groups-list .group-new-group form.search button[type="reset"],
+    .groups-list .public-groups-search form.search button[type="reset"],
+    .groups-list .group-new-group form.search button[type="reset"] {
+      display: block; }
+    .public-groups-list .public-groups-search form button[type="reset"],
+    .public-groups-list .group-new-group form button[type="reset"],
+    .groups-list .public-groups-search form button[type="reset"],
+    .groups-list .group-new-group form button[type="reset"] {
+      display: none; }
+    .public-groups-list .public-groups-search form button,
+    .public-groups-list .group-new-group form button,
+    .groups-list .public-groups-search form button,
+    .groups-list .group-new-group form button {
       width: 100%;
       margin-top: 10px; }
     .public-groups-list .public-groups-search .no-logged-in,
@@ -37,12 +47,16 @@
     .public-groups-list .group-container div[disabled],
     .groups-list .group-container div[disabled] {
       display: none; }
-    .public-groups-list .group-container .post-container,
-    .groups-list .group-container .post-container {
+    .public-groups-list .group-container .group-posts .post-container,
+    .groups-list .group-container .group-posts .post-container {
       border: 1px solid #ccc;
       margin: 12px 0;
       padding: 10px;
       font-size: 12px; }
+    .public-groups-list .group-container .group-posts .load-more-posts,
+    .groups-list .group-container .group-posts .load-more-posts {
+      width: 100%;
+      margin-bottom: 10px; }
     .public-groups-list .group-container .group-new-post textarea,
     .groups-list .group-container .group-new-post textarea {
       font-size: 12px; }

@@ -38,8 +38,13 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
      */
     private function loadFacebookPost($groupId, $postId = 0)
     {
-        $posts = $this->getFacebookPosts($groupId);
-        $this->saveFacebookPosts($posts, $postId);
+        $posts = $this->getFacebookPosts($groupId, $postId);
+        
+        if (count($posts)) {
+            $this->setLastPostUpdate($postId);
+            $this->getOldEntities($this->config('userPostsType'), $postId);
+            $this->saveFacebookPosts($posts, $postId);
+        }
     }
 
     /**
@@ -50,12 +55,7 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
     public function pushFacebookPost($entity, $message)
     {
         $group = get_post_meta($entity, $this->config('userGroupType'), true);
-        $post = $this->sendPostToFacebookGroup($group, $message);
-
-        if ($post) {
-            $postId = $group . '_' . $post;
-            $this->createLocalEntity('User Post', $message, $this->config('userPostsType'), $postId, $entity);
-        }
+        $this->sendPostToFacebookGroup($group, $message);
     }
 
     /**
@@ -75,17 +75,34 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
     }
 
     /**
-     *
+     * 
      * @param int $groupId
+     * @param int $postId
+     * @param int $offset
      * @return array
      */
-    private function getFacebookPosts($groupId)
+    public function getFacebookPosts($groupId, $postId = null, $offset = 0)
     {
-        $groupsList = $this->request->makeGetRequest($groupId . '/feed');
+        $groupsList = $this->request->makeGetRequest($groupId . '/feed', '', [
+            'since'  => get_post_meta($postId, 'last_post_update', true),
+            'until'  => 'now',
+            'limit'  => 6,
+            'offset' => $offset
+        ]);
 
         return array_key_exists('data', $groupsList)
             ? $groupsList['data']
             : [];
+    }
+
+    /**
+     * Save last post load in the Wordpress storage;
+     * @param int $group
+     */
+    private function setLastPostUpdate($group)
+    {
+        $date = gmdate('Y-m-d\TH:i:s');
+        update_post_meta($group, 'last_post_update', $date);
     }
 
     /**
@@ -118,6 +135,7 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
                 $this->config('userGroupType'), 
                 $group['id']
             );
+
             $this->updateEntityMeta($entity, $group, $this->config('userGroupType'));
             $this->loadFacebookPost($group['id'], $entity);
         }

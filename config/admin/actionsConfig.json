@@ -89,5 +89,12 @@
     "method": "searchLocalGroup",
     "priority": 10,
     "accepted_args": 1
+  },
+  "14": {
+    "action": "wp_ajax_get_posts",
+    "scope": null,
+    "method": "getGroupPosts",
+    "priority": 10,
+    "accepted_args": 3
   }
 }

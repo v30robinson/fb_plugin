@@ -95,6 +95,21 @@ class FBGroupsCore extends FBGroupsConfig
     }
 
     /**
+     * initialization of plugin scritps
+     * @param string $part - admin or public part
+     */
+    protected function initScripts($part)
+    {
+        foreach ($this->getConfig($part . '/scripts') as $key => $scripts) {
+            $this->template->insertScript(
+                $key,
+                $this->config('publicUrl') . '/js/' . $scripts->name . '.js',
+                $scripts->dependency
+            );
+        }
+    }
+
+    /**
      * Create menu page in the admin area
      * @param object $item
      */
@@ -140,7 +155,7 @@ class FBGroupsCore extends FBGroupsConfig
                 'supports'    => $postType->supports
             ]);
         }
-    }
+    }    
 
     /**
      * Get plugin config by file name

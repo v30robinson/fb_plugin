@@ -213,8 +213,21 @@
         form.on('submit', function () {
             let searchValue = $(this).find('input[type="text"]').val();
             clearGroupsList();
+            form.addClass('search');
             loadLocalGroupByTitle(0, searchValue);
             return false;
+        });
+    }
+
+    /**
+     * Reset search func
+     * @param {Object} form
+     */
+    function resetSearchForm(form) {
+        form.find('button[type="reset"]').on('click', function () {
+            form.removeClass('search');
+            clearGroupsList();
+            loadLocalGroupByTitle(0, '');
         });
     }
 
@@ -226,6 +239,14 @@
         getFacebookGroupInfo($('.group-new-group form input[name="fb-group-url"].hasToken'));
         loadMorePublicGroup($('.public-groups-list'));
         searchPublicGroup($('.public-groups-search form'));
+        resetSearchForm($('.public-groups-search form'));
+
+        $('.group-container:has(.group-posts)').each(function () {
+            var post = new groupsPost(jQuery, $(this), {
+                button: '.load-more-posts'
+            });
+            post.setLoadMoreEvent();
+        });
 
     });
 })(jQuery);

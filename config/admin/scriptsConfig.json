@@ -1,0 +1,6 @@
+{
+  "0": {
+    "name": "fb-group",
+    "dependency": ["jquery"]
+  }
+}
