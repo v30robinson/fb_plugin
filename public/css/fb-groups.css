@@ -36,6 +36,7 @@
       color: #740500; }
   .public-groups-list .group-loader .load-more,
   .groups-list .group-loader .load-more {
+    display: none;
     width: 100%; }
   .public-groups-list .group-container,
   .groups-list .group-container {

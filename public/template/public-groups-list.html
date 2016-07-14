@@ -1,4 +1,4 @@
-<div class="public-groups-list" data-groups-offset="5">
+<div class="public-groups-list" data-groups-offset="5" data-groups-search>
     <div class="group-new-group">
         {% if user %}
         <form action="{{ formUrl }}" name="fb-group" method="post">
@@ -57,9 +57,9 @@
             {% endif %}
         </div>
     {% endfor %}
-    {% if groupsCount > 5 %}
-        <div class="group-loader" data-count="{{ groupsCount }}">
-            <button type="button" class="load-more">Load more public groups...</button>
-        </div>
-    {% endif %}
+    <div class="group-loader" data-count="{{ groupsCount }}">
+        <button type="button" class="load-more" style="display: {{ groupsCount > 5 ? 'block' : 'none' }}">
+            Load more public groups...
+        </button>
+    </div>
 </div>

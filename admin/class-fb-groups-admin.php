@@ -24,44 +24,16 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
-     * @param WP_User $user
-     * @param int $userId
+     * Init endpoint for ajax getting user posts;
+     * send json with posts list.
      */
-    public function updateCurrentUserAction($user, $userId)
-    {
-        wp_set_current_user($userId);
-    }
-
-    /**
-     * Save user groups and posts to Wordpress DB as custom post type;
-     */
-    public function saveFacebookGroupsAction()
-    {
-        $this->facebookManager->loadFacebookGroups();
-    }
-
     public function getGroupPostsAction()
     {
-        if (array_key_exists('groupId', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
+        if ($this->checkRequest(['groupId', 'offset'])) {
             wp_send_json(
                 $this->facebookManager->getFacebookPosts($_REQUEST['groupId'], null, $_REQUEST['offset'])
             );
         }
-    }
-
-    /**
-     * Add new columns for default Wordpress list of posts.
-     * @param $columns
-     * @return mixed
-     */
-    public function customPostListColumnsFilter($columns)
-    {
-        return array_merge(
-            $columns, [
-                'group' => 'Group',
-                'published' => 'Published data'
-            ]
-        );
     }
 
     /**
@@ -70,7 +42,7 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function checkGroupEndpointAction()
     {
-        if (array_key_exists('id', $_REQUEST)) {
+        if ($this->checkRequest(['id'])) {
             wp_send_json(
                 $this->facebookManager->loadFacebookGroupInfo($_REQUEST['id'])
             );
@@ -83,7 +55,7 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function deleteLocalGroupAction()
     {
-        if (array_key_exists('groupId', $_REQUEST)) {
+        if ($this->checkRequest(['groupId'])) {
             wp_send_json(
                 $this->localEntityManager->deleteLocalEntityById($_REQUEST['groupId'])
             );
@@ -96,7 +68,7 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function getPublicGroupsAction()
     {
-        if (array_key_exists('search', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
+        if ($this->checkRequest(['search', 'offset'])) {
             wp_send_json(
                 $this->localEntityManager->getPublicGroupEntities($_REQUEST['offset'], 6, $_REQUEST['search'])
             );
@@ -110,7 +82,7 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function searchGroupsAction()
     {
-        if (array_key_exists('search', $_REQUEST)) {
+        if ($this->checkRequest(['search'])) {
             $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
             $facebookGroups = $this->facebookManager->findFacebookGroups($_REQUEST['search'], $nextCode);
             $groupsId = array_column($facebookGroups['data'], 'id');
@@ -127,6 +99,38 @@ class FBGroupsAdmin extends FBGroupsCore
         if (current_user_can('manage_options')) {
             $this->formManager->parsePublicGroupForm($_REQUEST);
         }
+    }
+
+    /**
+     * @param WP_User $user
+     * @param int $userId
+     */
+    public function updateCurrentUserAction($user, $userId)
+    {
+        wp_set_current_user($userId);
+    }
+
+    /**
+     * Save user groups and posts to Wordpress DB as custom post type;
+     */
+    public function saveFacebookGroupsAction()
+    {
+        $this->facebookManager->loadFacebookGroups();
+    }
+
+    /**
+     * Add new columns for default Wordpress list of posts.
+     * @param $columns
+     * @return mixed
+     */
+    public function customPostListColumnsFilter($columns)
+    {
+        return array_merge(
+            $columns, [
+                'group' => 'Group',
+                'published' => 'Published data'
+            ]
+        );
     }
 
     /**

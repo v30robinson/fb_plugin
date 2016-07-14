@@ -19,6 +19,9 @@ class GroupsPublic extends GroupsCore {
         this.container = groupContainer;
     }
 
+    /**
+     * Set event for change name and desc of group after focus out;
+     */
     setInputUrlEvent() {
         this.container.find(this.config.classes.focusInput).on('focusout', () => {
             this.getGroupInfo(this.getGroupIdByUrl(

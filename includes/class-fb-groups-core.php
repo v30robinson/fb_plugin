@@ -155,7 +155,22 @@ class FBGroupsCore extends FBGroupsConfig
                 'supports'    => $postType->supports
             ]);
         }
-    }    
+    }
+
+    /**
+     * Check request for must have params
+     * @param array $params
+     * @return bool
+     */
+    protected function checkRequest($params = [])
+    {
+        foreach ($params as $param) {
+            if (!array_key_exists($param, $_REQUEST)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Get plugin config by file name
