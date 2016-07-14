@@ -14,12 +14,14 @@
  */
 abstract class FBGroupsConfig
 {
-    const name            = 'fb-groups';
-    const userGroupType   = 'fb_group';
-    const userPostsType   = 'fb_post';
-    const publicGroupType = 'fb_group_public';
-    const facebookApi     = 'https://graph.facebook.com/v2.6/';
-    const facebookScope   = 'email,public_profile,user_managed_groups,publish_actions';
+    const name             = 'fb-groups';
+    const userGroupType    = 'fb_group';
+    const userPostsType    = 'fb_post';
+    const publicGroupType  = 'fb_group_public';
+    const facebookApi      = 'https://graph.facebook.com/v2.6/';
+    const facebookScope    = 'email,public_profile,user_managed_groups,publish_actions';
+    const cacheItem        = 5;
+    const maxItemForSelect = 10000;
     
     /**
      * Get config entity by name

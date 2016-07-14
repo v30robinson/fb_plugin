@@ -61,5 +61,16 @@
     width: calc(100% - 2px); }
     .wrap .widget-table a.load-more:hover {
       background-color: #566773; }
+.wrap #fb_group_public_widget {
+  margin-top: -20px; }
+  .wrap #fb_group_public_widget .local-storage-widget {
+    padding: 10px 25px; }
+  .wrap #fb_group_public_widget input[disabled] {
+    background-color: #eee; }
+  .wrap #fb_group_public_widget textarea {
+    height: 200px; }
+
+.post-type-fb_group_public h1 .page-title-action {
+  display: none; }
 
 /*# sourceMappingURL=fb-groups.css.map */

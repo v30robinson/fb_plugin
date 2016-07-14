@@ -89,5 +89,19 @@
     "method": "getGroupPosts",
     "priority": 10,
     "accepted_args": 3
+  },
+  "13": {
+    "action": "add_meta_boxes",
+    "scope": null,
+    "method": "initWidget",
+    "priority": 10,
+    "accepted_args": 1
+  },
+  "14": {
+    "action": "save_post",
+    "scope": null,
+    "method": "savePost",
+    "priority": 10,
+    "accepted_args": 3
   }
 }

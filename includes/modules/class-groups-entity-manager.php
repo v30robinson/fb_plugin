@@ -16,7 +16,6 @@ class FBGroupsEntityManager extends FBGroupsConfig
 {
     /**
      * Create new entity or update if exists
-     * 
      * @param string $name
      * @param string $description
      * @param int $entityId
@@ -44,7 +43,6 @@ class FBGroupsEntityManager extends FBGroupsConfig
 
     /**
      * Update existing Wordpress custom post
-     *
      * @param int $entityId
      * @param string $name
      * @param string $description
@@ -77,7 +75,6 @@ class FBGroupsEntityManager extends FBGroupsConfig
 
     /**
      * Update entity meta data
-     *
      * @param int $postId
      * @param array $entityData
      * @param string $entityType
@@ -94,7 +91,6 @@ class FBGroupsEntityManager extends FBGroupsConfig
 
     /**
      * Try to get local group or post id by entity id and type
-     *
      * @param int $entity - custom post id
      * @param string $type - custom post type
      * @return int|null
@@ -105,7 +101,7 @@ class FBGroupsEntityManager extends FBGroupsConfig
             'meta_key'       => $type,
             'meta_value'     => $entity,
             'post_type'      => $type,
-            'posts_per_page' => 1000
+            'posts_per_page' => $this->config('maxItemForSelect')
         ]);
 
         return count($posts) > 0 ? $posts[0]->ID : null;
@@ -120,7 +116,7 @@ class FBGroupsEntityManager extends FBGroupsConfig
     {
         return get_posts([
             'post_type'      => $this->config('publicGroupType'),
-            'posts_per_page' => 1000,
+            'posts_per_page' => $this->config('maxItemForSelect'),
             'meta_query'     => [
                 [
                     'key'     => $this->config('publicGroupType'),
@@ -132,19 +128,18 @@ class FBGroupsEntityManager extends FBGroupsConfig
     }
 
     /**
-     *
-     * @param $postType
+     * Get entities, which should be deleted.
+     * @param string $postType
      * @param int $parent
      */
     protected function getOldEntities($postType, $parent = 0)
     {
-
         $oldPosts = get_posts([
             'orderby'        => 'id',
             'order'          => 'DESC',
             'post_type'      => $postType,
-            'posts_per_page' => 1000,
-            'offset'         => 5,
+            'posts_per_page' => $this->config('maxItemForSelect'),
+            'offset'         => $this->config('cacheItem'),
             'post_author'    => get_current_user_id(),
             'post_parent'    => $parent
         ]);

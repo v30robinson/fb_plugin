@@ -60,7 +60,6 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
 
     /**
      * Send post to Facebook group
-     *
      * @param int $groupId
      * @param string $message
      * @return int|null
@@ -75,7 +74,7 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
     }
 
     /**
-     * 
+     * Get last facebook posts
      * @param int $groupId
      * @param int $postId
      * @param int $offset
@@ -86,7 +85,7 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
         $groupsList = $this->request->makeGetRequest($groupId . '/feed', '', [
             'since'  => get_post_meta($postId, 'last_post_update', true),
             'until'  => 'now',
-            'limit'  => 6,
+            'limit'  => (int)$this->config('cacheItem') + 1,
             'offset' => $offset
         ]);
 
@@ -123,7 +122,6 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
 
     /**
      * Save facebook groups to the local storage
-     *
      * @param array $groups
      */
     private function saveFacebookGroups(array $groups)
@@ -143,7 +141,6 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
 
     /**
      * Save facebook posts to the local storage
-     *
      * @param array $posts
      * @param int $postId
      */
@@ -163,7 +160,6 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
 
     /**
      * Get group info by Facebook Group id
-     *
      * @param $groupId
      * @return array
      */

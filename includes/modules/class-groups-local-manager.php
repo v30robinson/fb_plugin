@@ -25,7 +25,7 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
         $customPosts = get_posts([
             'post_type'   => $this->config('userGroupType'),
             'author'      => $userId,
-            'numberposts' => 1000,
+            'numberposts' => $this->config('maxItemForSelect'),
             'orderby'     => 'date'
         ]);
 
@@ -53,7 +53,7 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
         $customPosts = get_posts([
             'post_type'   => $this->config('userPostsType'),
             'post_parent' => $groupId,
-            'numberposts' => 1000,
+            'numberposts' => $this->config('maxItemForSelect'),
             'orderby'     => 'date'
         ]);
 
@@ -84,6 +84,18 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
     }
 
     /**
+     * Save changes of public group in the original meta container
+     * @param int $entity
+     * @param array $data
+     */
+    public function savePublicGroupMeta($entity, $data = [])
+    {
+        $group = $this->getPublicGroupEntity($entity);
+        $group = array_merge($group, $data);
+        $this->updateEntityMeta($entity, $group, $this->config('publicGroupType'));
+    }
+
+    /**
      * Get all posts entities by group id
      * @param int $offset
      * @param int $count
@@ -106,6 +118,16 @@ class FBGroupsLocalManager extends FBGroupsEntityManager
         }
 
         return $posts;
+    }
+
+    /**
+     * Get saved public group by entity id
+     * @param int $id
+     * @return array
+     */
+    public function getPublicGroupEntity($id)
+    {
+        return $this->getLocalEntityMeta($id, $this->config('publicGroupType'));
     }
 
     /**

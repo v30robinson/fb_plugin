@@ -149,10 +149,11 @@ class FBGroupsCore extends FBGroupsConfig
     {
         foreach ($this->getConfig('postType') as $key => $postType) {
             register_post_type($key, [
-                'labels'      => $postType->labels,
-                'public'      => $postType->public,
-                'has_archive' => $postType->has_archive,
-                'supports'    => $postType->supports
+                'labels'       => $postType->labels,
+                'public'       => $postType->public,
+                'has_archive'  => $postType->has_archive,
+                'supports'     => $postType->supports,
+                'show_in_menu' => $postType->adminMenu
             ]);
         }
     }

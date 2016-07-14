@@ -35,6 +35,9 @@
                         <b>Description</b>
                     </th>
                     <th class="manage-column">
+                        <b>Members</b>
+                    </th>
+                    <th class="manage-column">
                         <b>Url</b>
                     </th>
                 </tr>
@@ -42,7 +45,9 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td class="id">{{ group.id }}</td>
+                            <td class="id">
+                                <a title="Edit" href="/wp-admin/post.php?post={{ group.localId }}&action=edit">{{ group.id }}</a>
+                            </td>
                             <td class="exist">
                                 <a href="#" data-id="{{ group.localId }}" class="deleteFromLocalStorage">
                                     Delete from local storage
@@ -50,6 +55,7 @@
                             </td>
                             <td class="name">{{ group.name }}</td>
                             <td class="description">{{ group.description }}</td>
+                            <td class="members">{{ group.members }}</td>
                             <td class="link">
                                 <a href="https://www.facebook.com/groups/{{ group.id }}/" target="_blank">
                                     Open group

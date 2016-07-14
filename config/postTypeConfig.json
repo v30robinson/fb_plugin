@@ -20,9 +20,14 @@
     ]
   },
   "fb_group_public": {
-    "labels": null,
-    "public": false,
+    "labels": {
+      "edit_item": "Edit local group"
+    },
+    "public": true,
     "has_archive": false,
-    "supports": []
+    "adminMenu": false,
+    "supports": [
+      "my-meta-box"
+    ]
   }
 }

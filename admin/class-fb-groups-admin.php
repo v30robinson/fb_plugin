@@ -76,22 +76,6 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
-     * Init endpoint for ajax search Facebook groups;
-     * send json with groups list.
-     * @todo need refactoring
-     */
-    public function searchGroupsAction()
-    {
-        if ($this->checkRequest(['search'])) {
-            $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
-            $facebookGroups = $this->facebookManager->findFacebookGroups($_REQUEST['search'], $nextCode);
-            $groupsId = array_column($facebookGroups['data'], 'id');
-            $localEntities = $this->localEntityManager->findLocalGroupsByIds($groupsId);
-            wp_send_json($this->localEntityManager->mergeLocalGroup($facebookGroups, $localEntities));
-        }
-    }
-
-    /**
      * Init endpoint for ajax adding public Facebook group.
      */
     public function addPublicGroupEndpointAction()
@@ -157,6 +141,22 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
+     * Save changes after edit local group form
+     * @param int $post_id
+     * @param WP_Post $post
+     */
+    public function savePostAction($post_id, $post)
+    {
+        if ($post->post_type == $this->config('publicGroupType')) {
+            $this->localEntityManager->savePublicGroupMeta($post_id, [
+                'name'        => $_REQUEST['fb_group_name'],
+                'description' => $_REQUEST['fb-group-description'],
+                'members'     => $_REQUEST['fb_group_members']
+            ]);
+        }
+    }
+
+    /**
      * Display local storage
      */
     public function localStorageAction()
@@ -184,9 +184,52 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
+     * Initialization widget for edit local group;
+     * Run displayWidgetAction for render HTML
+     */
+    public function initWidgetAction()
+    {
+        add_meta_box('fb_group_public_widget', 
+            'List of public group fields', 
+            [$this, 'displayWidgetAction'],
+            'fb_group_public',
+            'normal',
+            'default'
+        );
+    }
+
+    /**
+     * Display local group on the page
+     * @param $post
+     */
+    public function displayWidgetAction($post)
+    {
+        $this->template->render('edit-local-storage', [
+            'group' => $this->localEntityManager->getPublicGroupEntity($post->ID)
+        ]);
+    }
+
+    /**
+     * Init endpoint for ajax search Facebook groups;
+     * send json with groups list.
+     * @todo need refactoring
+     */
+    public function searchGroupsAction()
+    {
+        if ($this->checkRequest(['search'])) {
+            $nextCode = array_key_exists('after', $_REQUEST) ? $_REQUEST['after'] : null;
+            $facebookGroups = $this->facebookManager->findFacebookGroups($_REQUEST['search'], $nextCode);
+            $groupsId = array_column($facebookGroups['data'], 'id');
+            $localEntities = $this->localEntityManager->findLocalGroupsByIds($groupsId);
+            wp_send_json($this->localEntityManager->mergeLocalGroup($facebookGroups, $localEntities));
+        }
+    }
+    
+    /**
      * Edit current Wordpress list for Facebook Posts
      * @param $column - current column for editing
      * @param $postId
+     * @todo need refactoring
      */
     public function customPostListAction($column, $postId)
     {

@@ -75,4 +75,28 @@
       &:hover { background-color: #566773; }
     }
   }
+
+  #fb_group_public_widget {
+    margin-top: -20px;
+
+    .local-storage-widget {
+      padding: 10px 25px;
+    }
+
+    input[disabled] {
+      background-color: #eee;
+    }
+
+    textarea {
+      height: 200px;
+    }
+  }
+}
+
+.post-type-fb_group_public {
+  h1 {
+    .page-title-action {
+      display: none;
+    }
+  }
 }
