@@ -149,13 +149,13 @@ class GroupsPublic extends GroupsCore {
             <div class="group-container">
                 <div class="group-title">
                     <b>Group name</b>: ${data.name}
-                </div>\
+                </div>
                 <div class="group-url">
                     <b>Group url</b>: <a target="_blank" href="${data.url}">Open ${data.name} group</a>
-                </div>\
+                </div>
                 <div class="group-description" ${data.description ? '' : 'disabled'}>
                     <b>Group description</b>: ${data.description}
-                </div>\
+                </div>
                 <div class="group-members" ${data.members ? '' : 'disabled'}>
                     <b>Group members</b>: ${data.members}
                 </div>
