@@ -1,4 +1,14 @@
-class groupsCore {
+/**
+ * Core class for public part of Facebook Groups plugin
+ *
+ * @link       http://nicktemple.com/
+ * @license    http://www.mev.com/license.txt
+ * @copyright  2016 by MEV, LLC
+ * @since      1.0
+ * @author     Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
+ * @author     Nick Temple <nick@intellispire.com>
+ */
+class GroupsCore {
 
     /**
      * Setup base config for plugin;
@@ -7,39 +17,7 @@ class groupsCore {
     constructor(currentConfig) {
         this.jquery = jQuery || null;
         this.ajaxPath = fbl.ajaxurl || null;
-        this.config = eval('this.' + currentConfig + 'Config()');
-    }
-
-    /**
-     * Setup config for user groups func
-     * @returns {{postPerPage: number, classes: {loadMoreButton: string}, endpoints: {loadMore: (function())}}}
-     */
-    groupsPostConfig() {
-        return {
-            postPerPage: 5,
-            classes: { loadMoreButton: '.load-more-posts' },
-            endpoints: {
-                loadMore: (group, offset) => {
-                    return this.ajaxPath + `?action=get_posts&groupId=${group}&offset=${offset}`
-                }
-            }
-        };
-    }
-
-    /**
-     *
-     * @returns {{postPerPage: number, classes: {loadMoreButton: string}, endpoints: {getPublicGroups: (function())}}}
-     */
-    publicGroupsConfig() {
-        return {
-            postPerPage: 5,
-            classes: { loadMoreButton: '.group-loader .load-more' },
-            endpoints: {
-                getPublicGroups: (offset, text) => {
-                    return this.ajaxPath + `?action=search_local_group_by&text=${encodeURI(text)}&offset=${offset}`
-                }
-            }
-        }
+        this.config = eval('this.set' + currentConfig + 'Config()');
     }
 
     /**
@@ -54,7 +32,7 @@ class groupsCore {
      * Display posts to the container
      * @param {Array} data
      */
-    displayPosts(data) {
+    displayData(data) {
         data.forEach((post, key) => {
             if (key < this.config.postPerPage) {
                 this.container.find(this.config.classes.loadMoreButton).before(
@@ -62,5 +40,56 @@ class groupsCore {
                 );
             }
         });
+    }
+
+    /**
+     * @param {int} currentOffset
+     */
+    setOffsetForContainer(currentOffset) {
+        this.container.data(this.config.name + '-offset', parseInt(currentOffset) + this.config.postPerPage);
+    }
+
+    /**
+     * Setup config for user groups func
+     * @returns {{postPerPage: number, classes: {loadMoreButton: string}, endpoints: {loadMore: (function())}}}
+     */
+    setGroupsPostConfig() {
+        return {
+            name: 'posts',
+            postPerPage: 5,
+            classes: { loadMoreButton: '.load-more-posts' },
+            endpoints: {
+                loadMore: (group, offset) => {
+                    return this.ajaxPath + `?action=get_posts&groupId=${group}&offset=${offset}`
+                }
+            }
+        };
+    }
+
+    /**
+     *
+     * @returns {{postPerPage: number, classes: {loadMoreButton: string}, endpoints: {getPublicGroups: (function())}}}
+     */
+    setGroupsPublicConfig() {
+        return {
+            name: 'groups',
+            postPerPage: 5,
+            groupUrlFormat: /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
+            classes: {
+                loadMoreButton: '.group-loader .load-more',
+                resetFormButton: '.public-groups-search form button[type="reset"]',
+                searchForm: '.public-groups-search form',
+                groupEntity: '.group-container',
+                focusInput: '.group-new-group form input[name="fb-group-url"].hasToken'
+            },
+            endpoints: {
+                getPublicGroups: (offset, text) => {
+                    return this.ajaxPath + `?action=search_local_group_by&text=${encodeURI(text)}&offset=${offset}`
+                },
+                getGroupInfo: (id) => {
+                    return this.ajaxPath + `?action=get_group_info_by&id=${id}`
+                }
+            }
+        }
     }
 }

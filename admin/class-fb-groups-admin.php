@@ -109,10 +109,10 @@ class FBGroupsAdmin extends FBGroupsCore
      */
     public function searchLocalGroupAction()
     {
-        if (array_key_exists('text', $_REQUEST) && array_key_exists('page', $_REQUEST)) {
-            $page = (int)$_REQUEST['page'] * 5;
-            $text = $_REQUEST['text'];
-            wp_send_json($this->localEntityManager->getPublicGroupEntities($page, 6, $text));
+        if (array_key_exists('text', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
+            wp_send_json(
+                $this->localEntityManager->getPublicGroupEntities($_REQUEST['offset'], 6, $_REQUEST['text'])
+            );
         }
     }
 

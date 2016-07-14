@@ -1,10 +1,18 @@
 {
   "0": {
-    "name": "fb-group-main",
-    "dependency": ["jquery"]
+    "name": "fb-group-core",
+    "dependency": []
   },
   "1": {
     "name": "fb-group-posts",
     "dependency": []
+  },
+  "2": {
+    "name": "fb-group-public",
+    "dependency": []
+  },
+  "3": {
+    "name": "fb-group-main",
+    "dependency": ["jquery"]
   }
 }

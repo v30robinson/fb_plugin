@@ -8,23 +8,15 @@
  * @author     Stanislav Vysotskyi <stanislav.vysotskyi@mev.com>
  * @author     Nick Temple <nick@intellispire.com>
  */
-class groupsPost {
+class GroupsPost extends GroupsCore {
 
     /**
      * Create object for work with group posts
-     * @param {Object} jquery
      * @param {Object} postContainer
-     * @param {Object} config
      */
-    constructor(jquery, postContainer, config = {}) {
-        this.jquery = jquery;
+    constructor(postContainer) {
+        super(GroupsPost.name);
         this.container = postContainer;
-        this.config = config;
-        this.endpoints = {
-            loadMore: (group, offset) => {
-                return this.config.ajaxUrl + `?action=get_posts&groupId=${group}&offset=${offset}`
-            }
-        }
     }
 
     /**
@@ -32,7 +24,7 @@ class groupsPost {
      * Group id and offset options located in the data of container
      */
     setLoadMoreEvent() {
-        this.container.find(this.config.button).on('click', () => {
+        this.container.find(this.config.classes.loadMoreButton).on('click', () => {
             this.getGroupPosts(this.container.data('group-id'), this.container.data('posts-offset'));
             return false;
         });
@@ -44,32 +36,10 @@ class groupsPost {
      * @param {int} offset
      */
     getGroupPosts(groupId, offset) {
-        this.jquery.get(this.endpoints.loadMore(groupId, offset), (data) => {
-            this.displayPosts(data);
-            this.toggleLoadMoreButton(data.length > 5);
-            this.container.data('posts-offset', parseInt(offset) + 5);
-        });
-    }
-
-    /**
-     * Show or hide load more button
-     * @param {boolean} show
-     */
-    toggleLoadMoreButton(show = false) {
-        this.container.find(this.config.button).toggle(show);
-    }
-
-    /**
-     * Display posts to the container
-     * @param {Array} data
-     */
-    displayPosts(data) {
-        data.forEach((post, key) => {
-            if (key < 5) {
-                this.container.find(this.config.button).before(
-                    this.constructor.htmlEntity(post)
-                );
-            }
+        this.jquery.get(this.config.endpoints.loadMore(groupId, offset), (data) => {
+            this.displayData(data);
+            this.toggleLoadMoreButton(data.length > this.config.postPerPage);
+            this.setOffsetForContainer(offset);
         });
     }
 

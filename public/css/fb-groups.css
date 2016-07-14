@@ -20,6 +20,7 @@
     .public-groups-list .group-new-group form button[type="reset"],
     .groups-list .public-groups-search form button[type="reset"],
     .groups-list .group-new-group form button[type="reset"] {
+      transition: all 1s ease;
       display: none; }
     .public-groups-list .public-groups-search form button,
     .public-groups-list .group-new-group form button,
