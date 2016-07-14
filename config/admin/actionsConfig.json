@@ -21,76 +21,69 @@
     "accepted_args": 1
   },
   "3": {
-    "action": "wp_ajax_get_group_list_from",
-    "scope": null,
-    "method": "loadMoreEndpoint",
-    "priority": 10,
-    "accepted_args": 1
-  },
-  "4": {
     "action": "login_enqueue_scripts",
     "scope": null,
     "method": "adminLibs",
     "priority": 100,
     "accepted_args": 1
   },
-  "5": {
+  "4": {
     "action": "admin_enqueue_scripts",
     "scope": null,
     "method": "adminLibs",
     "priority": 100,
     "accepted_args": 1
   },
-  "6": {
+  "5": {
     "action": "fbl/after_login",
     "scope": null,
     "method": "updateCurrentUser",
     "priority": 10,
     "accepted_args": 2
   },
-  "7": {
+  "6": {
     "action": "fbl/after_login",
     "scope": null,
     "method": "saveFacebookGroups",
     "priority": 20,
     "accepted_args": 1
   },
-  "8": {
+  "7": {
     "action": "admin_menu",
     "scope": null,
     "method": "createWidgetMenu",
     "priority": 10,
     "accepted_args": 1
   },
-  "9": {
+  "8": {
     "action": "wp_ajax_search_group",
     "scope": null,
     "method": "searchGroups",
     "priority": 10,
     "accepted_args": 1
   },
-  "10": {
+  "9": {
     "action": "wp_ajax_delete_group",
     "scope": null,
     "method": "deleteLocalGroup",
     "priority": 10,
     "accepted_args": 1
   },
-  "11": {
+  "10": {
     "action": "wp_ajax_add_public_group",
     "scope": null,
     "method": "addPublicGroupEndpoint",
     "priority": 10,
     "accepted_args": 1
   },
-  "12": {
-    "action": "wp_ajax_search_local_group_by",
+  "11": {
+    "action": "wp_ajax_get_public_groups",
     "scope": null,
-    "method": "searchLocalGroup",
+    "method": "getPublicGroups",
     "priority": 10,
     "accepted_args": 1
   },
-  "14": {
+  "12": {
     "action": "wp_ajax_get_posts",
     "scope": null,
     "method": "getGroupPosts",

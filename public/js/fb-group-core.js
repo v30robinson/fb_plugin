@@ -67,7 +67,7 @@ class GroupsCore {
     }
 
     /**
-     *
+     * Setup config for public groups func
      * @returns {{postPerPage: number, classes: {loadMoreButton: string}, endpoints: {getPublicGroups: (function())}}}
      */
     setGroupsPublicConfig() {
@@ -84,7 +84,7 @@ class GroupsCore {
             },
             endpoints: {
                 getPublicGroups: (offset, text) => {
-                    return this.ajaxPath + `?action=search_local_group_by&text=${encodeURI(text)}&offset=${offset}`
+                    return this.ajaxPath + `?action=get_public_groups&search=${encodeURI(text)}&offset=${offset}`
                 },
                 getGroupInfo: (id) => {
                     return this.ajaxPath + `?action=get_group_info_by&id=${id}`

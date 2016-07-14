@@ -78,19 +78,6 @@ class FBGroupsAdmin extends FBGroupsCore
     }
 
     /**
-     * Init endpoint for ajax loading more Facebook groups;
-     * send json with groups list.
-     */
-    public function loadMoreEndpointAction()
-    {
-        if (array_key_exists('page', $_REQUEST)) {
-            wp_send_json(
-                $this->localEntityManager->getPublicGroupEntities($_REQUEST['page'])
-            );
-        }
-    }
-
-    /**
      * Init endpoint for ajax deleting local groups;
      * send json with groups list.
      */
@@ -107,11 +94,11 @@ class FBGroupsAdmin extends FBGroupsCore
      * Init endpoint for ajax search local groups;
      * send json with groups list.
      */
-    public function searchLocalGroupAction()
+    public function getPublicGroupsAction()
     {
-        if (array_key_exists('text', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
+        if (array_key_exists('search', $_REQUEST) && array_key_exists('offset', $_REQUEST)) {
             wp_send_json(
-                $this->localEntityManager->getPublicGroupEntities($_REQUEST['offset'], 6, $_REQUEST['text'])
+                $this->localEntityManager->getPublicGroupEntities($_REQUEST['offset'], 6, $_REQUEST['search'])
             );
         }
     }
