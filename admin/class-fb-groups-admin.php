@@ -162,7 +162,8 @@ class FBGroupsAdmin extends FBGroupsCore
     public function localStorageAction()
     {
         $this->template->render('local-storage', [
-            'groups' => $this->localEntityManager->getPublicGroupEntities(0, 100000)
+            'groups'  => $this->localEntityManager->getPublicGroupEntities(0, $this->config('maxItemForSelect')),
+            'formUrl' => site_url()
         ]);
     }
     

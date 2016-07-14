@@ -46,7 +46,7 @@
                     {% for group in groups %}
                         <tr>
                             <td class="id">
-                                <a title="Edit" href="/wp-admin/post.php?post={{ group.localId }}&action=edit">{{ group.id }}</a>
+                                <a title="Edit" href="{{ formUrl }}/wp-admin/post.php?post={{ group.localId }}&action=edit">{{ group.id }}</a>
                             </td>
                             <td class="exist">
                                 <a href="#" data-id="{{ group.localId }}" class="deleteFromLocalStorage">
