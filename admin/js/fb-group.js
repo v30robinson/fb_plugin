@@ -146,7 +146,7 @@
 
     /**
      * AJAX call to Wordpress Endpoint for get list of groups
-     * @param {Object} searchField
+     * @param {string} searchField
      * @param {string|null} more
      */
     function getGroupList(searchField, more = null) {
@@ -167,7 +167,7 @@
     /**
      * Get data from HTML row
      * @param {Object} selector
-     * @returns {Array}
+     * @returns {Object}
      */
     function getGroupInfo(selector) {
         let row  = selector.closest('tr');
@@ -198,7 +198,7 @@
 
     /**
      * reset table; if noData is null - show no-result message
-     * @param {bool} noData
+     * @param {boolean} noData
      */
     function resetTable(noData = false) {
         return (noData != false)

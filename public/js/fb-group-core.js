@@ -74,7 +74,7 @@ class GroupsCore {
         return {
             name: 'groups',
             postPerPage: 5,
-            groupUrlFormat: /https\:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
+            groupUrlFormat: /https:\/\/www.facebook.com\/groups\/(.+?)\/.*/,
             classes: {
                 loadMoreButton: '.group-loader .load-more',
                 resetFormButton: '.public-groups-search form button[type="reset"]',

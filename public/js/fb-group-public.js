@@ -113,7 +113,7 @@ class GroupsPublic extends GroupsCore {
 
     /**
      * Set search mode for groups list
-     * @param {string} text
+     * @param {string|null} text
      */
     setSearchMode(text) {
         this.container.data('groups-search', text || '');

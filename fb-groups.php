@@ -55,32 +55,13 @@ class FBGroups
     }
 
     /**
-     * Check composer dependency
-     * @return bool
-     */
-    private  function checkComposerDependency()
-    {
-        if (!defined('FB_COMPOSER')) {
-            echo '<b>Composer error!</b> 
-              You need to add <b>FB_COMPOSER</b> const to the WordPress config with path to composer file. It\'s needed 
-              for installing plugin dependency (twig and etc.)
-              ';
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * The code that runs during plugin activation.
      */
     public function activate_fb_groups()
     {
-        if ($this->checkPluginDependency() && $this->checkComposerDependency()) {
-            putenv("COMPOSER_HOME=" . FB_COMPOSER . '.composer');
-            exec('(cd ' . plugin_dir_path(__FILE__) .' && php ' . FB_COMPOSER . 'composer install) 2>&1');
-            return;
+        if (!$this->checkPluginDependency()) {
+            exit();
         }
-        exit();
     }
 
     /**
