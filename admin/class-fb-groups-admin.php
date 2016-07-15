@@ -56,9 +56,7 @@ class FBGroupsAdmin extends FBGroupsCore
     public function deleteLocalGroupAction()
     {
         if ($this->checkRequest(['groupId'])) {
-            wp_send_json(
-                $this->localEntityManager->deleteLocalEntityById($_REQUEST['groupId'])
-            );
+            $this->localEntityManager->deleteLocalEntityById($_REQUEST['groupId']);
         }
     }
 
