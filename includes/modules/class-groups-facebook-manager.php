@@ -128,10 +128,10 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
     {
         foreach ($groups as $group) {
             $entity = $this->createLocalEntity(
-                $group['name'], 
-                $group['description'],
-                $this->config('userGroupType'), 
-                $group['id']
+                $this->getEntityParam($group, 'name'),
+                $this->getEntityParam($group, 'description'),
+                $this->config('userGroupType'),
+                $this->getEntityParam($group, 'id')
             );
 
             $this->updateEntityMeta($entity, $group, $this->config('userGroupType'));
@@ -148,10 +148,10 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
     {
         foreach ($posts as $post) {
             $entity = $this->createLocalEntity(
-                array_key_exists('story', $post) ? $post['story'] : 'User Post', 
-                $post['message'],
-                $this->config('userPostsType'), 
-                $post['id'],
+                array_key_exists('story', $post) ? $post['story'] : 'User Post',
+                $this->getEntityParam($post, 'message'),
+                $this->config('userPostsType'),
+                $this->getEntityParam($post, 'id'),
                 $postId
             );
             $this->updateEntityMeta($entity, $post, $this->config('userPostsType'));
@@ -187,8 +187,8 @@ class FBGroupsFacebookManager extends FBGroupsEntityManager
 
         if (array_key_exists('data', $response)) {
             return [
-                'data'   => $response['data'],
-                'paging' => $response['paging']
+                'data'   => $this->getEntityParam($response, 'data'),
+                'paging' => $this->getEntityParam($response, 'paging'),
             ];
         }
 

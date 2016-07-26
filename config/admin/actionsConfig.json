@@ -38,7 +38,7 @@
     "action": "fbl/after_login",
     "scope": null,
     "method": "updateCurrentUser",
-    "priority": 10,
+    "priority": 1,
     "accepted_args": 2
   },
   "6": {

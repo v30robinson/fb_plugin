@@ -37,7 +37,7 @@ abstract class FBGroupsConfig
         if (method_exists($this, $param)) {
             return call_user_func([$this, $param]);
         }
-        
+
         return '';
     }
 

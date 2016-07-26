@@ -148,4 +148,15 @@ class FBGroupsEntityManager extends FBGroupsConfig
             wp_delete_post($post->ID, true);
         }
     }
+
+    /**
+     * Get param from array
+     * @param array $array
+     * @param string $param
+     * @return string
+     */
+    protected function getEntityParam($array, $param)
+    {
+        return array_key_exists($param, $array) ? $array[$param] : '';
+    }
 }
