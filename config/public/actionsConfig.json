@@ -26,5 +26,12 @@
     "method": "facebookSync",
     "priority": 20,
     "accepted_args": 1
+  },
+  "4": {
+    "action": "login_enqueue_scripts",
+    "scope": null,
+    "method": "loginLibs",
+    "priority": 100,
+    "accepted_args": 1
   }
 }

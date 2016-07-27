@@ -82,4 +82,12 @@ class FBGroupsPublic extends FBGroupsCore
     {
         $this->facebookManager->loadFacebookGroups();
     }
+
+    /**
+     * Register the stylesheets and js for the login area.
+     */
+    public function loginLibsAction()
+    {
+        $this->template->insertJSAndStyleAction();
+    }
 }

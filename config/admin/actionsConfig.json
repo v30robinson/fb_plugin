@@ -20,13 +20,6 @@
     "priority": 10,
     "accepted_args": 1
   },
-  "3": {
-    "action": "login_enqueue_scripts",
-    "scope": null,
-    "method": "adminLibs",
-    "priority": 100,
-    "accepted_args": 1
-  },
   "4": {
     "action": "admin_enqueue_scripts",
     "scope": null,
