@@ -18,7 +18,7 @@
                 Facebook Group members:
                 <input type="text" name="fb-group-members" placeholder="Enter count of Facebook group members">
             </label>
-            <button type="submit">Add group to local storage</button>
+            <button type="submit">Add Facebook group to local storage</button>
         </form>
         {% else %}
         <div class="no-logged-in">
@@ -59,7 +59,7 @@
     {% endfor %}
     <div class="group-loader" data-count="{{ groupsCount }}">
         <button type="button" class="load-more" style="display: {{ groupsCount > 5 ? 'block' : 'none' }}">
-            Load more public groups...
+            Load more Facebook Public Groups...
         </button>
     </div>
 </div>

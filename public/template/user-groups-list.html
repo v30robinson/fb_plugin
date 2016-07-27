@@ -23,7 +23,7 @@
                     {% endfor %}
                     {% if group.posts|length > 5 %}
                         <button class="load-more-posts" type="button">
-                            Load more posts
+                            Load more Facebook Group Posts
                         </button>
                     {% endif %}
                 </div>
@@ -32,7 +32,7 @@
                         <input type="hidden" name="fb-group-id" value="{{ group.id }}">
                         <label for="fb-group-post"></label>
                         <textarea name="fb-group-post" id="fb-group-post" required placeholder="Print post message..."></textarea>
-                        <button type="submit">Send post to {{ group.title }} group</button>
+                        <button type="submit">Send post to {{ group.title }} Facebook group</button>
                     </form>
                 </div>
             </div>
